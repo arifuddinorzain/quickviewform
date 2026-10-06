@@ -4198,77 +4198,107 @@ function extractProjectData(
        ADD-ON ITEMS EXTRACTION (SECTION 6: OFFICE USE):
        Busbar Combiner Box, Optimizer, Ballast, RSD, Battery Stand
        -------------------------------------------------------- */
-    let addonBusbar =
-        findValueNextToAnyLabel(
-            sheet,
-            [
-                "ADD ON: BUSBAR COMBINER BOX",
-                "ADD ON BUSBAR COMBINER BOX",
-                "ADD-ON: BUSBAR COMBINER BOX",
-                "ADD-ON BUSBAR COMBINER BOX",
-                "BUSBAR COMBINER BOX",
-                "BUSBAR COMBINER",
-                "BUSBAR BOX",
-                "COMBINER BOX"
-            ]
-        );
+    let addonBusbar = findAddonValue(sheet, "busbar");
+    if (addonBusbar === "-") {
+        addonBusbar =
+            findValueNextToAnyLabel(
+                sheet,
+                [
+                    "ADD ON: BUSBAR COMBINER BOX",
+                    "ADD ON BUSBAR COMBINER BOX",
+                    "ADD-ON: BUSBAR COMBINER BOX",
+                    "ADD-ON BUSBAR COMBINER BOX",
+                    "BUSBAR COMBINER BOX",
+                    "BUSBAR COMBINER",
+                    "BUSBAR BOX",
+                    "COMBINER BOX"
+                ]
+            );
+    }
+    if (addonBusbar === "-") {
+        addonBusbar = readCell(sheet, "C90");
+    }
 
-    let addonOptimizer =
-        findValueNextToAnyLabel(
-            sheet,
-            [
-                "ADD ON: OPTIMIZER",
-                "ADD ON OPTIMIZER",
-                "ADD-ON: OPTIMIZER",
-                "ADD-ON OPTIMIZER",
-                "OPTIMIZER",
-                "OPTIMIZERS",
-                "SOLAR OPTIMIZER",
-                "MODULE OPTIMIZER"
-            ]
-        );
+    let addonOptimizer = findAddonValue(sheet, "optimizer");
+    if (addonOptimizer === "-") {
+        addonOptimizer =
+            findValueNextToAnyLabel(
+                sheet,
+                [
+                    "ADD ON: OPTIMIZER",
+                    "ADD ON OPTIMIZER",
+                    "ADD-ON: OPTIMIZER",
+                    "ADD-ON OPTIMIZER",
+                    "OPTIMIZER",
+                    "OPTIMIZERS",
+                    "SOLAR OPTIMIZER",
+                    "MODULE OPTIMIZER"
+                ]
+            );
+    }
+    if (addonOptimizer === "-") {
+        addonOptimizer = readCell(sheet, "C91");
+    }
 
-    let addonBallast =
-        findValueNextToAnyLabel(
-            sheet,
-            [
-                "ADD ON: BALLAST",
-                "ADD ON BALLAST",
-                "ADD-ON: BALLAST",
-                "ADD-ON BALLAST",
-                "BALLAST",
-                "BALLAST SYSTEM",
-                "BALLAST MOUNTING"
-            ]
-        );
+    let addonBallast = findAddonValue(sheet, "ballast");
+    if (addonBallast === "-") {
+        addonBallast =
+            findValueNextToAnyLabel(
+                sheet,
+                [
+                    "ADD ON: BALLAST",
+                    "ADD ON BALLAST",
+                    "ADD-ON: BALLAST",
+                    "ADD-ON BALLAST",
+                    "BALLAST",
+                    "BALLAST SYSTEM",
+                    "BALLAST MOUNTING"
+                ]
+            );
+    }
+    if (addonBallast === "-") {
+        addonBallast = readCell(sheet, "C92");
+    }
 
-    let addonRsd =
-        findValueNextToAnyLabel(
-            sheet,
-            [
-                "ADD ON: RSD",
-                "ADD ON RSD",
-                "ADD-ON: RSD",
-                "ADD-ON RSD",
-                "RSD",
-                "RAPID SHUTDOWN",
-                "RAPID SHUTDOWN DEVICE"
-            ]
-        );
+    let addonRsd = findAddonValue(sheet, "rsd");
+    if (addonRsd === "-") {
+        addonRsd =
+            findValueNextToAnyLabel(
+                sheet,
+                [
+                    "ADD ON: RSD",
+                    "ADD ON RSD",
+                    "ADD-ON: RSD",
+                    "ADD-ON RSD",
+                    "RSD",
+                    "RAPID SHUTDOWN",
+                    "RAPID SHUTDOWN DEVICE"
+                ]
+            );
+    }
+    if (addonRsd === "-") {
+        addonRsd = readCell(sheet, "C93");
+    }
 
-    let addonBatteryStand =
-        findValueNextToAnyLabel(
-            sheet,
-            [
-                "ADD ON: BATTERY STAND",
-                "ADD ON BATTERY STAND",
-                "ADD-ON: BATTERY STAND",
-                "ADD-ON BATTERY STAND",
-                "BATTERY STAND",
-                "BATTERY RACK",
-                "STAND BATTERY"
-            ]
-        );
+    let addonBatteryStand = findAddonValue(sheet, "batteryStand");
+    if (addonBatteryStand === "-") {
+        addonBatteryStand =
+            findValueNextToAnyLabel(
+                sheet,
+                [
+                    "ADD ON: BATTERY STAND",
+                    "ADD ON BATTERY STAND",
+                    "ADD-ON: BATTERY STAND",
+                    "ADD-ON BATTERY STAND",
+                    "BATTERY STAND",
+                    "BATTERY RACK",
+                    "STAND BATTERY"
+                ]
+            );
+    }
+    if (addonBatteryStand === "-") {
+        addonBatteryStand = readCell(sheet, "C94");
+    }
 
 
     return {
@@ -5535,7 +5565,7 @@ function findValueNextToLabel(
 
             for (
                 let offset = 1;
-                offset <= 8;
+                col + offset <= range.e.c;
                 offset++
             ) {
 
@@ -5579,6 +5609,57 @@ function findValueNextToLabel(
 
     return "-";
 
+}
+
+
+/* ============================================================
+   FIND ADD-ON VALUE (SMART ROW SEARCH)
+   ============================================================ */
+
+function findAddonValue(sheet, addonType)
+{
+    if (!sheet || !sheet["!ref"]) return "-";
+
+    const range = XLSX.utils.decode_range(sheet["!ref"]);
+
+    for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let col = range.s.c; col <= range.e.c; col++) {
+            const cellAddr = XLSX.utils.encode_cell({ r: row, c: col });
+            const cell = sheet[cellAddr];
+            if (!cell) continue;
+
+            const norm = normalizeLabel(getCellRawValue(cell));
+            if (!norm) continue;
+
+            let matched = false;
+            if (addonType === "busbar") {
+                matched = (norm.includes("BUSBAR") && (norm.includes("COMBINER") || norm.includes("BOX") || norm.includes("ADD ON") || norm.includes("ADDON"))) ||
+                          norm === "BUSBAR COMBINER BOX" || norm === "BUSBAR COMBINER" || norm === "BUSBAR";
+            } else if (addonType === "optimizer") {
+                matched = norm.includes("OPTIMIZER");
+            } else if (addonType === "ballast") {
+                matched = norm.includes("BALLAST");
+            } else if (addonType === "rsd") {
+                matched = /\bRSD\b/i.test(norm) || norm.includes("RAPID SHUTDOWN");
+            } else if (addonType === "batteryStand") {
+                matched = (norm.includes("BATTERY") && norm.includes("STAND")) || norm.includes("BATTERY RACK") || norm.includes("STAND BATTERY");
+            }
+
+            if (matched) {
+                for (let cOffset = col + 1; cOffset <= range.e.c; cOffset++) {
+                    const valAddr = XLSX.utils.encode_cell({ r: row, c: cOffset });
+                    const valCell = sheet[valAddr];
+                    if (!valCell) continue;
+                    const val = readCellObject(valCell);
+                    if (val !== "-" && !isDisallowedLabelValue(val)) {
+                        return val;
+                    }
+                }
+            }
+        }
+    }
+
+    return "-";
 }
 
 
@@ -6052,23 +6133,42 @@ function renderAddonStatus(elementId, value)
     const element = document.getElementById(elementId);
     if (!element) return;
 
-    if (!value || value === "-" || value === "" || value === null || value === undefined || String(value).trim() === "") {
+    if (!value || value === "-" || value === "" || value === null || value === undefined) {
         element.innerHTML = '<span class="addon-badge badge-no">✕ NO</span>';
         return;
     }
 
     const strVal = String(value).trim();
+    if (strVal === "" || strVal === "-") {
+        element.innerHTML = '<span class="addon-badge badge-no">✕ NO</span>';
+        return;
+    }
+
     const upper = strVal.toUpperCase();
 
-    if (upper === "0" || upper === "NO" || upper === "N" || upper === "FALSE" || upper === "TIDAK") {
+    // 0 / NO / FALSE / TIDAK / OFF / NONE
+    if (upper === "0" || upper === "NO" || upper === "N" || upper === "FALSE" || upper === "TIDAK" || upper === "NONE" || upper === "OFF") {
         element.innerHTML = '<span class="addon-badge badge-no">✕ NO</span>';
-    } else if (upper === "1" || upper === "YES" || upper === "Y" || upper === "TRUE" || upper === "YA") {
-        element.innerHTML = '<span class="addon-badge badge-yes">✓ YES</span>';
-    } else if (/^\d+$/.test(strVal)) {
-        element.innerHTML = `<span class="addon-badge badge-yes">✓ YES (${escapeHtml(strVal)})</span>`;
-    } else {
-        element.innerHTML = `<span class="addon-badge badge-custom">${escapeHtml(strVal)}</span>`;
+        return;
     }
+
+    // 1 / YES / Y / TRUE / YA / SELECTED / INCLUDED
+    if (upper === "1" || upper === "YES" || upper === "Y" || upper === "TRUE" || upper === "YA" || upper === "SELECTED" || upper === "INCLUDED" || upper.startsWith("YES")) {
+        element.innerHTML = '<span class="addon-badge badge-yes">✓ YES</span>';
+        return;
+    }
+
+    // Numeric quantity (e.g. 4 -> ✓ YES (4))
+    const num = Number(strVal);
+    if (!isNaN(num) && num > 0) {
+        element.innerHTML = num === 1
+            ? '<span class="addon-badge badge-yes">✓ YES</span>'
+            : `<span class="addon-badge badge-yes">✓ YES (${escapeHtml(strVal)})</span>`;
+        return;
+    }
+
+    // Custom text
+    element.innerHTML = `<span class="addon-badge badge-custom">${escapeHtml(strVal)}</span>`;
 }
 
 
