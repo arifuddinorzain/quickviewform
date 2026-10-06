@@ -6052,18 +6052,18 @@ function renderAddonStatus(elementId, value)
     const element = document.getElementById(elementId);
     if (!element) return;
 
-    if (!value || value === "-" || value === "" || value === null || value === undefined) {
-        element.innerHTML = '<span class="addon-badge badge-none">-</span>';
+    if (!value || value === "-" || value === "" || value === null || value === undefined || String(value).trim() === "") {
+        element.innerHTML = '<span class="addon-badge badge-no">✕ NO</span>';
         return;
     }
 
     const strVal = String(value).trim();
     const upper = strVal.toUpperCase();
 
-    if (upper === "YES" || upper === "Y" || upper === "TRUE" || upper === "YA") {
-        element.innerHTML = '<span class="addon-badge badge-yes">✓ YES</span>';
-    } else if (upper === "NO" || upper === "N" || upper === "FALSE" || upper === "TIDAK") {
+    if (upper === "0" || upper === "NO" || upper === "N" || upper === "FALSE" || upper === "TIDAK") {
         element.innerHTML = '<span class="addon-badge badge-no">✕ NO</span>';
+    } else if (upper === "1" || upper === "YES" || upper === "Y" || upper === "TRUE" || upper === "YA") {
+        element.innerHTML = '<span class="addon-badge badge-yes">✓ YES</span>';
     } else if (/^\d+$/.test(strVal)) {
         element.innerHTML = `<span class="addon-badge badge-yes">✓ YES (${escapeHtml(strVal)})</span>`;
     } else {
