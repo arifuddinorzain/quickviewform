@@ -1,0 +1,11 @@
+# Temporary Excel files
+~$*.xlsx
+~$*.xls
+
+# Temporary inspection / debug files
+*.tmp
+*.log
+temp_*
+inspect_*.py
+test_*.py
+validate_*.py

@@ -1,0 +1,7427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Solar Project Quick View</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7f9fc,
+            #eef2f7
+        );
+
+    color: #172033;
+
+    min-height: 100vh;
+
+}
+
+.container {
+
+    width: min(1180px, 92%);
+
+    margin: auto;
+
+    padding: 30px 0 60px;
+
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+
+}
+
+.logo {
+
+    width: 54px;
+
+    height: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 16px;
+
+    font-size: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffd166,
+            #fca311
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(245,166,35,.25);
+
+}
+
+.header h1 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+}
+
+.header p {
+
+    margin: 5px 0 0;
+
+    color: #7d8699;
+
+    font-size: 13px;
+
+}
+
+/* =====================================================
+   TABS
+   ===================================================== */
+
+.tabs {
+
+    display: flex;
+
+    gap: 8px;
+
+    background: white;
+
+    padding: 7px;
+
+    border-radius: 15px;
+
+    margin-bottom: 22px;
+
+    border: 1px solid #edf0f5;
+
+    box-shadow:
+        0 7px 25px
+        rgba(23,32,51,.05);
+
+}
+
+.tab-button {
+
+    flex: 1;
+
+    border: none;
+
+    background: transparent;
+
+    color: #737d90;
+
+    padding: 13px 18px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition: .2s;
+
+}
+
+.tab-button:hover {
+
+    background: #f7f8fb;
+
+    color: #172033;
+
+}
+
+.tab-button.active {
+
+    background: #172033;
+
+    color: white;
+
+    box-shadow:
+        0 5px 15px
+        rgba(23,32,51,.15);
+
+}
+
+.tab-content {
+
+    display: none;
+
+}
+
+.tab-content.active {
+
+    display: block;
+
+}
+
+/* =====================================================
+   UPLOAD
+   ===================================================== */
+
+.upload-box {
+
+    background: white;
+
+    border: 2px dashed #d5dce7;
+
+    border-radius: 22px;
+
+    padding: 45px 30px;
+
+    text-align: center;
+
+    transition: .25s ease;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.04);
+
+}
+
+.upload-box:hover {
+
+    border-color: #f5a623;
+
+    background: #fffdf8;
+
+}
+
+.upload-box.drag-over {
+
+    border-color: #f5a623;
+
+    background: #fff8e8;
+
+    transform: scale(1.01);
+
+}
+
+.upload-icon {
+
+    width: 70px;
+
+    height: 70px;
+
+    margin: auto;
+
+    margin-bottom: 18px;
+
+    border-radius: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 34px;
+
+    background: #fff4d7;
+
+    transition: .25s ease;
+
+}
+
+.upload-box.drag-over .upload-icon {
+
+    transform: scale(1.08);
+
+    background: #ffe7a3;
+
+}
+
+.upload-box h2 {
+
+    margin: 0;
+
+    font-size: 21px;
+
+}
+
+.upload-box p {
+
+    color: #7d8699;
+
+    font-size: 14px;
+
+    margin: 8px 0 20px;
+
+}
+
+#excelFile {
+
+    display: none;
+
+}
+
+.upload-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 13px 24px;
+
+    border-radius: 11px;
+
+    background: #172033;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 650;
+
+    transition: .2s;
+
+}
+
+.upload-button:hover {
+
+    background: #2b3850;
+
+    transform: translateY(-1px);
+
+}
+
+.file-name {
+
+    margin-top: 15px;
+
+    color: #7d8699;
+
+    font-size: 13px;
+
+}
+
+.drop-text {
+
+    margin-top: 12px;
+
+    color: #a0a8b7;
+
+    font-size: 12px;
+
+}
+
+.template-badge {
+
+    margin-top: 8px;
+
+    color: #8992a5;
+
+    font-size: 11px;
+
+}
+
+/* =====================================================
+   ERROR
+   ===================================================== */
+
+.error-box {
+
+    display: none;
+
+    margin-top: 20px;
+
+    background: #fff1f1;
+
+    border: 1px solid #ffd1d1;
+
+    color: #b42318;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    font-size: 13px;
+
+}
+
+/* =====================================================
+   DASHBOARD
+   ===================================================== */
+
+#dashboard {
+
+    display: none;
+
+    margin-top: 25px;
+
+}
+
+/* =====================================================
+   PROJECT HEADER
+   ===================================================== */
+
+.project-header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #172033,
+            #27344d
+        );
+
+    color: white;
+
+    border-radius: 20px;
+
+    padding: 26px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 12px 30px
+        rgba(23,32,51,.15);
+
+}
+
+.project-header h2 {
+
+    margin: 0 0 5px;
+
+    font-size: 22px;
+
+}
+
+.project-header p {
+
+    margin: 0;
+
+    color: #aeb7c8;
+
+    font-size: 13px;
+
+}
+
+.status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #5ee487;
+
+    background:
+        rgba(34,197,94,.13);
+
+    border:
+        1px solid
+        rgba(34,197,94,.2);
+
+    padding: 8px 13px;
+
+    border-radius: 30px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+.status-dot {
+
+    width: 7px;
+
+    height: 7px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+
+}
+
+/* =====================================================
+   STATS
+   ===================================================== */
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+
+}
+
+.stat {
+
+    background: white;
+
+    border-radius: 17px;
+
+    padding: 22px;
+
+    border: 1px solid #edf0f5;
+
+    box-shadow:
+        0 7px 25px
+        rgba(23,32,51,.05);
+
+}
+
+.stat-label {
+
+    color: #8992a5;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: .5px;
+
+    margin-bottom: 8px;
+
+}
+
+.stat-value {
+
+    font-size: 28px;
+
+    font-weight: 750;
+
+}
+
+.stat-unit {
+
+    color: #8992a5;
+
+    font-size: 13px;
+
+}
+
+/* =====================================================
+   GRID
+   ===================================================== */
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 18px;
+
+}
+
+.card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 23px;
+
+    border: 1px solid #edf0f5;
+
+    box-shadow:
+        0 7px 25px
+        rgba(23,32,51,.045);
+
+}
+
+.card.full {
+
+    grid-column: 1 / -1;
+
+}
+
+.card-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+
+}
+
+.card-icon {
+
+    width: 41px;
+
+    height: 41px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 20px;
+
+    background: #fff4d7;
+
+}
+
+.card-title h3 {
+
+    margin: 0;
+
+    font-size: 16px;
+
+}
+
+.card-title span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #929bad;
+
+    font-size: 11px;
+
+}
+
+/* =====================================================
+   INFORMATION
+   ===================================================== */
+
+.info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
+}
+
+.info {
+
+    background: #f7f8fb;
+
+    padding: 15px;
+
+    border-radius: 11px;
+
+}
+
+.info-label {
+
+    color: #8992a5;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+    margin-bottom: 6px;
+
+}
+
+.info-value {
+
+    color: #172033;
+
+    font-size: 15px;
+
+    font-weight: 650;
+
+    word-break: break-word;
+
+}
+
+.address-container {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    background: #f7f8fb;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+}
+
+.address-container .address {
+
+    flex: 1;
+
+    background: transparent;
+
+    padding: 0;
+
+    line-height: 1.7;
+
+    font-size: 15px;
+
+    font-weight: 550;
+
+    border-radius: 0;
+
+}
+
+.map-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    background: #172033;
+
+    color: white;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+
+    transition: .2s ease;
+
+    box-shadow:
+        0 4px 10px
+        rgba(23,32,51,.15);
+
+}
+
+.map-btn:hover {
+
+    background: #2b3850;
+
+    transform: translateY(-1px);
+
+}
+
+.map-btn:active {
+
+    transform: scale(.97);
+
+}
+
+/* =====================================================
+   ADD-ON SECTION
+   ===================================================== */
+
+.addon-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+
+}
+
+.addon-card-item {
+
+    background: #f7f8fb;
+
+    padding: 13px 15px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    border: 1px solid #edf0f5;
+
+    transition: all .2s ease;
+
+}
+
+.addon-card-item:hover {
+
+    background: #f1f4f9;
+
+    border-color: #e0e5ee;
+
+}
+
+.addon-card-item.full-width {
+
+    grid-column: 1 / -1;
+
+}
+
+.addon-item-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+
+}
+
+.addon-item-icon {
+
+    width: 36px;
+
+    height: 36px;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+    box-shadow: 0 2px 6px rgba(23,32,51,.05);
+
+    flex-shrink: 0;
+
+}
+
+.addon-item-text {
+
+    min-width: 0;
+
+}
+
+.addon-item-label {
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    color: #172033;
+
+    line-height: 1.3;
+
+}
+
+.addon-item-sub {
+
+    font-size: 10px;
+
+    color: #8992a5;
+
+    font-weight: 600;
+
+    letter-spacing: .3px;
+
+    margin-top: 2px;
+
+}
+
+.addon-item-status {
+
+    flex-shrink: 0;
+
+}
+
+.addon-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: .3px;
+
+    white-space: nowrap;
+
+    transition: all .2s ease;
+
+}
+
+.addon-badge.badge-yes {
+
+    background: #e6f9ed;
+
+    color: #0e9355;
+
+    border: 1px solid #b7ebd0;
+
+    box-shadow: 0 2px 6px rgba(14, 147, 85, 0.12);
+
+}
+
+.addon-badge.badge-no {
+
+    background: #f4f5f8;
+
+    color: #7b8497;
+
+    border: 1px solid #e1e5ec;
+
+}
+
+.addon-badge.badge-none {
+
+    background: #f7f8fb;
+
+    color: #a0a8b7;
+
+    border: 1px dashed #d5dce7;
+
+    padding: 4px 10px;
+
+}
+
+.addon-badge.badge-custom {
+
+    background: #eff8ff;
+
+    color: #175cd3;
+
+    border: 1px solid #b2ddff;
+
+    box-shadow: 0 2px 6px rgba(23, 92, 211, 0.1);
+
+}
+
+/* =====================================================
+   RESET
+   ===================================================== */
+
+.reset-button {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 11px;
+
+    background: #e9edf3;
+
+    color: #4f596d;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.reset-button:hover {
+
+    background: #dfe4eb;
+
+}
+
+/* =====================================================
+   CALCULATOR
+   ===================================================== */
+
+.tool-card {
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    border: 1px solid #edf0f5;
+
+    box-shadow:
+        0 10px 30px
+        rgba(23,32,51,.05);
+
+}
+
+.tool-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 20px;
+
+}
+
+.tool-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #fff4d7;
+
+    font-size: 25px;
+
+}
+
+.tool-header h2 {
+
+    margin: 0;
+
+    font-size: 20px;
+
+}
+
+.tool-header p {
+
+    margin: 4px 0 0;
+
+    color: #8992a5;
+
+    font-size: 12px;
+
+}
+
+.calculator {
+
+    max-width: 430px;
+
+    margin: auto;
+
+    background: #f7f8fb;
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+}
+
+.calc-display {
+
+    width: 100%;
+
+    min-height: 90px;
+
+    background: #172033;
+
+    color: white;
+
+    border-radius: 14px;
+
+    padding: 15px;
+
+    margin-bottom: 14px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: flex-end;
+
+    font-size: 32px;
+
+    font-weight: 650;
+
+    overflow: hidden;
+
+    word-break: break-all;
+
+}
+
+.calc-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 9px;
+
+}
+
+.calc-btn {
+
+    border: none;
+
+    min-height: 58px;
+
+    border-radius: 12px;
+
+    background: white;
+
+    color: #172033;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 8px
+        rgba(23,32,51,.06);
+
+    transition: .15s;
+
+}
+
+.calc-btn:hover {
+
+    transform: translateY(-1px);
+
+    background: #eef1f6;
+
+}
+
+.calc-btn:active {
+
+    transform: scale(.96);
+
+}
+
+.calc-btn.operator {
+
+    background: #fff4d7;
+
+}
+
+.calc-btn.equal {
+
+    background: #172033;
+
+    color: white;
+
+}
+
+.calc-btn.clear {
+
+    background: #ffe4e4;
+
+}
+
+.calc-history {
+
+    max-width: 430px;
+
+    margin: 20px auto 0;
+
+}
+
+.calc-history h3 {
+
+    margin: 0 0 10px;
+
+    font-size: 14px;
+
+}
+
+.history-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+.history-item {
+
+    background: #f7f8fb;
+
+    padding: 10px 13px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+
+    color: #667085;
+
+}
+
+/* =====================================================
+   UNIT CONVERTER
+   ===================================================== */
+
+.converter {
+
+    max-width: 700px;
+
+    margin: auto;
+
+}
+
+.converter-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 55px 1fr;
+
+    gap: 12px;
+
+    align-items: end;
+
+}
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+.form-group label {
+
+    color: #8992a5;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+}
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    border: 1px solid #dce1e9;
+
+    background: #f7f8fb;
+
+    padding: 14px;
+
+    border-radius: 11px;
+
+    outline: none;
+
+    color: #172033;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+}
+
+.form-group input:focus,
+.form-group select:focus {
+
+    border-color: #f5a623;
+
+    background: white;
+
+}
+
+.swap-button {
+
+    width: 55px;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: #172033;
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+}
+
+.swap-button:hover {
+
+    background: #2b3850;
+
+}
+
+.convert-result {
+
+    margin-top: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #172033,
+            #27344d
+        );
+
+    color: white;
+
+    padding: 25px;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+}
+
+.result-label {
+
+    color: #aeb7c8;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+}
+
+.result-value {
+
+    font-size: 34px;
+
+    font-weight: 750;
+
+    margin-top: 8px;
+
+    word-break: break-word;
+
+}
+
+.result-equation {
+
+    color: #aeb7c8;
+
+    margin-top: 7px;
+
+    font-size: 12px;
+
+}
+
+.converter-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+}
+
+.action-button {
+
+    flex: 1;
+
+    border: none;
+
+    padding: 13px;
+
+    border-radius: 11px;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+    background: #e9edf3;
+
+    color: #4f596d;
+
+}
+
+.action-button.primary {
+
+    background: #172033;
+
+    color: white;
+
+}
+
+/* =====================================================
+   QUICK CONVERSIONS
+   ===================================================== */
+
+.quick-conversions {
+
+    margin-top: 25px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+}
+
+.quick-card {
+
+    background: #f7f8fb;
+
+    border-radius: 11px;
+
+    padding: 13px;
+
+    text-align: center;
+
+}
+
+.quick-card strong {
+
+    display: block;
+
+    font-size: 14px;
+
+}
+
+.quick-card span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #8992a5;
+
+    font-size: 11px;
+
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.footer {
+
+    text-align: center;
+
+    color: #a0a8b7;
+
+    font-size: 11px;
+
+    margin-top: 30px;
+
+}
+
+
+/* =====================================================
+   TNB BILL PDF READER
+   ===================================================== */
+
+.pdf-reader {
+    max-width: 900px;
+    margin: auto;
+}
+
+.pdf-upload-box {
+    background: white;
+    border: 2px dashed #d5dce7;
+    border-radius: 22px;
+    padding: 45px 30px;
+    text-align: center;
+    transition: .25s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,.04);
+}
+
+.pdf-upload-box:hover {
+    border-color: #f5a623;
+    background: #fffdf8;
+}
+
+.pdf-upload-box.drag-over {
+    border-color: #f5a623;
+    background: #fff8e8;
+    transform: scale(1.01);
+}
+
+.pdf-upload-icon {
+    width: 70px;
+    height: 70px;
+    margin: auto auto 18px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    background: #fff4d7;
+}
+
+#tnbPdfFile {
+    display: none;
+}
+
+.pdf-file-name {
+    margin-top: 15px;
+    color: #7d8699;
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.pdf-status {
+    margin-top: 18px;
+    display: none;
+    background: #f7f8fb;
+    border-radius: 12px;
+    padding: 13px 15px;
+    color: #667085;
+    font-size: 13px;
+    text-align: left;
+}
+
+.pdf-result {
+    display: none;
+    margin-top: 20px;
+}
+
+.pdf-result-card {
+    background: white;
+    border-radius: 18px;
+    padding: 23px;
+    border: 1px solid #edf0f5;
+    box-shadow: 0 7px 25px rgba(23,32,51,.045);
+}
+
+.pdf-result-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.pdf-result-title h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.pdf-result-title span {
+    display: block;
+    margin-top: 3px;
+    color: #929bad;
+    font-size: 11px;
+}
+
+.pdf-address {
+    width: 100%;
+    min-height: 150px;
+    resize: vertical;
+    border: 1px solid #dce1e9;
+    background: #f7f8fb;
+    padding: 15px;
+    border-radius: 12px;
+    outline: none;
+    color: #172033;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 550;
+    line-height: 1.65;
+}
+
+.pdf-address:focus {
+    border-color: #f5a623;
+    background: white;
+}
+
+.pdf-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.pdf-actions button {
+    flex: 1;
+}
+
+.pdf-page-note {
+    margin-top: 10px;
+    color: #8992a5;
+    font-size: 11px;
+}
+
+.pdf-success {
+    color: #16803c;
+    background: #eefbf2;
+    border: 1px solid #ccefd6;
+}
+
+.pdf-warning {
+    color: #9a6700;
+    background: #fff8e1;
+    border: 1px solid #f4df9b;
+}
+
+.pdf-error {
+    color: #b42318;
+    background: #fff1f1;
+    border: 1px solid #ffd1d1;
+}
+
+@media(max-width:750px) {
+    .pdf-upload-box {
+        padding: 35px 18px;
+    }
+
+    .pdf-actions {
+        flex-direction: column;
+    }
+}
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media(max-width:750px) {
+
+    .container {
+
+        width: 94%;
+
+        padding-top: 20px;
+
+    }
+
+    .tabs {
+
+        flex-direction: column;
+
+    }
+
+    .stats {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .card.full {
+
+        grid-column: auto;
+
+    }
+
+    .info-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .addon-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .project-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+    }
+
+    .converter-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .swap-button {
+
+        width: 100%;
+
+    }
+
+    .quick-conversions {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+    .address-container {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+    .map-btn {
+
+        width: 100%;
+
+        justify-content: center;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- =====================================================
+     HEADER
+     ===================================================== -->
+
+<div class="header">
+
+    <div class="logo">
+        ☀️
+    </div>
+
+    <div>
+
+        <h1>
+            Solar Project Quick View
+        </h1>
+
+        <p>
+            Excel information, calculator & engineering unit converter. By Arif
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TABS
+     ===================================================== -->
+
+<div class="tabs">
+
+    <button
+        class="tab-button active"
+        onclick="openTab('projectTab', this)"
+    >
+        📊 Project Quick View
+    </button>
+
+    <button
+        class="tab-button"
+        onclick="openTab('calculatorTab', this)"
+    >
+        🧮 Calculator
+    </button>
+
+    <button
+        class="tab-button"
+        onclick="openTab('converterTab', this)"
+    >
+        📐 Unit Converter
+    </button>
+
+    <button
+        class="tab-button"
+        onclick="openTab('tnbBillTab', this)"
+    >
+        🧾 TNB Bill
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     PROJECT TAB
+     ===================================================== -->
+
+<div
+    id="projectTab"
+    class="tab-content active"
+>
+
+<div
+    class="upload-box"
+    id="uploadBox"
+>
+
+    <div class="upload-icon">
+        📊
+    </div>
+
+    <h2>
+        Upload Project Excel
+    </h2>
+
+    <p>
+        Upload your completed project form (.xlsx / .xls)
+    </p>
+
+    <label
+        for="excelFile"
+        class="upload-button"
+    >
+        📁 Choose Excel File
+    </label>
+
+    <input
+        type="file"
+        id="excelFile"
+        accept=".xlsx,.xls"
+    >
+
+    <div class="drop-text">
+        or drag & drop your Excel file here
+    </div>
+
+    <div
+        class="file-name"
+        id="fileName"
+    >
+        No file selected
+    </div>
+
+    <div
+        class="template-badge"
+        id="templateBadge"
+    ></div>
+
+</div>
+
+
+<div
+    class="error-box"
+    id="errorBox"
+></div>
+
+
+<div id="dashboard">
+
+<div class="project-header">
+
+    <div>
+
+        <h2 id="projectName">
+            -
+        </h2>
+
+        <p>
+            Solar Project Information
+        </p>
+
+    </div>
+
+    <div class="status">
+
+        <span class="status-dot"></span>
+
+        EXCEL LOADED
+
+    </div>
+
+</div>
+
+
+<div class="stats">
+
+    <div class="stat">
+
+        <div class="stat-label">
+            SYSTEM SIZE
+        </div>
+
+        <div class="stat-value">
+
+            <span id="kwp">
+                -
+            </span>
+
+            <span class="stat-unit">
+                kWp
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-label">
+            AC CAPACITY
+        </div>
+
+        <div class="stat-value">
+
+            <span id="kwac">
+                -
+            </span>
+
+            <span class="stat-unit">
+                kWac
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-label">
+            PANEL QUANTITY
+        </div>
+
+        <div class="stat-value">
+
+            <span id="panelQty">
+                -
+            </span>
+
+            <span class="stat-unit">
+                pcs
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="grid">
+
+
+<div class="card full">
+
+    <div class="card-title">
+
+        <div class="card-icon">
+            👤
+        </div>
+
+        <div>
+
+            <h3>
+                Personal Information
+            </h3>
+
+            <span>
+                Customer and business development
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info">
+
+            <div class="info-label">
+                Name
+            </div>
+
+            <div
+                class="info-value"
+                id="name"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                BD Name
+            </div>
+
+            <div
+                class="info-value"
+                id="bdName"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                TNB Meter
+            </div>
+
+            <div
+                class="info-value"
+                id="tnbMeter"
+            >
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card full">
+
+    <div class="card-title">
+
+        <div class="card-icon">
+            📍
+        </div>
+
+        <div>
+
+            <h3>
+                Address (Premis)
+            </h3>
+
+            <span>
+                Solar installation location
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="address-container">
+        <div
+            class="address"
+            id="address"
+        >
+            -
+        </div>
+        <button
+            type="button"
+            id="openMapBtn"
+            class="map-btn"
+            onclick="openInGoogleMaps()"
+            title="Open in Google Maps"
+        >
+            📍 Open Maps
+        </button>
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-title">
+
+        <div class="card-icon">
+            ☀️
+        </div>
+
+        <div>
+
+            <h3>
+                PV Module
+            </h3>
+
+            <span>
+                Solar panel information
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info">
+
+            <div class="info-label">
+                Module Brand
+            </div>
+
+            <div
+                class="info-value"
+                id="moduleBrand"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                Module Power
+            </div>
+
+            <div
+                class="info-value"
+                id="modulePower"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                Panel Quantity
+            </div>
+
+            <div
+                class="info-value"
+                id="moduleQty"
+            >
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-title">
+
+        <div class="card-icon">
+            ⚡
+        </div>
+
+        <div>
+
+            <h3>
+                Inverter
+            </h3>
+
+            <span>
+                Inverter information
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info">
+
+            <div class="info-label">
+                Inverter Brand
+            </div>
+
+            <div
+                class="info-value"
+                id="inverterBrand"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                Inverter Model
+            </div>
+
+            <div
+                class="info-value"
+                id="inverterModel"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                Inverter Quantity
+            </div>
+
+            <div
+                class="info-value"
+                id="inverterQty"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                MPPT Number
+            </div>
+
+            <div
+                class="info-value"
+                id="mpptNumber"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info full-width" style="grid-column: 1 / -1;">
+
+            <div class="info-label">
+                Max Output Current
+            </div>
+
+            <div
+                class="info-value"
+                id="maxOutputCurrent"
+            >
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-title">
+
+        <div class="card-icon">
+            🔋
+        </div>
+
+        <div>
+
+            <h3>
+                Battery
+            </h3>
+
+            <span>
+                Battery storage information
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info">
+
+            <div class="info-label">
+                Battery Brand
+            </div>
+
+            <div
+                class="info-value"
+                id="batteryBrand"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                Battery Model / Capacity
+            </div>
+
+            <div
+                class="info-value"
+                id="batteryModel"
+            >
+                -
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-label">
+                Battery Quantity
+            </div>
+
+            <div
+                class="info-value"
+                id="batteryQty"
+            >
+                -
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-title">
+
+        <div class="card-icon">
+            🧩
+        </div>
+
+        <div>
+
+            <h3>
+                Add-On Items
+            </h3>
+
+            <span>
+                SECTION 6: OFFICE USE Add-ons
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="addon-grid">
+
+        <div class="addon-card-item">
+            <div class="addon-item-left">
+                <div class="addon-item-icon">⚡</div>
+                <div class="addon-item-text">
+                    <div class="addon-item-label">Busbar Combiner Box</div>
+                    <div class="addon-item-sub">ADD ON: BUSBAR COMBINER BOX</div>
+                </div>
+            </div>
+            <div class="addon-item-status" id="addonBusbar">
+                <span class="addon-badge badge-none">-</span>
+            </div>
+        </div>
+
+        <div class="addon-card-item">
+            <div class="addon-item-left">
+                <div class="addon-item-icon">🔄</div>
+                <div class="addon-item-text">
+                    <div class="addon-item-label">Optimizer</div>
+                    <div class="addon-item-sub">ADD ON: OPTIMIZER</div>
+                </div>
+            </div>
+            <div class="addon-item-status" id="addonOptimizer">
+                <span class="addon-badge badge-none">-</span>
+            </div>
+        </div>
+
+        <div class="addon-card-item">
+            <div class="addon-item-left">
+                <div class="addon-item-icon">🏗️</div>
+                <div class="addon-item-text">
+                    <div class="addon-item-label">Ballast</div>
+                    <div class="addon-item-sub">ADD ON: BALLAST</div>
+                </div>
+            </div>
+            <div class="addon-item-status" id="addonBallast">
+                <span class="addon-badge badge-none">-</span>
+            </div>
+        </div>
+
+        <div class="addon-card-item">
+            <div class="addon-item-left">
+                <div class="addon-item-icon">🛑</div>
+                <div class="addon-item-text">
+                    <div class="addon-item-label">RSD</div>
+                    <div class="addon-item-sub">ADD ON: RSD</div>
+                </div>
+            </div>
+            <div class="addon-item-status" id="addonRsd">
+                <span class="addon-badge badge-none">-</span>
+            </div>
+        </div>
+
+        <div class="addon-card-item full-width">
+            <div class="addon-item-left">
+                <div class="addon-item-icon">🔋</div>
+                <div class="addon-item-text">
+                    <div class="addon-item-label">Battery Stand</div>
+                    <div class="addon-item-sub">ADD ON: BATTERY STAND</div>
+                </div>
+            </div>
+            <div class="addon-item-status" id="addonBatteryStand">
+                <span class="addon-badge badge-none">-</span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<button
+    class="reset-button"
+    onclick="resetDashboard()"
+>
+    ↻ Upload Another Excel
+</button>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     CALCULATOR TAB
+     ===================================================== -->
+
+<div
+    id="calculatorTab"
+    class="tab-content"
+>
+
+<div class="tool-card">
+
+    <div class="tool-header">
+
+        <div class="tool-icon">
+            🧮
+        </div>
+
+        <div>
+
+            <h2>
+                Calculator
+            </h2>
+
+            <p>
+                Basic calculator for quick engineering calculations
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="calculator">
+
+        <div
+            class="calc-display"
+            id="calcDisplay"
+        >
+            0
+        </div>
+
+
+        <div class="calc-buttons">
+
+            <button
+                class="calc-btn clear"
+                onclick="calculatorClear()"
+            >
+                AC
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorDelete()"
+            >
+                DEL
+            </button>
+
+            <button
+                class="calc-btn operator"
+                onclick="calculatorInput('%')"
+            >
+                %
+            </button>
+
+            <button
+                class="calc-btn operator"
+                onclick="calculatorInput('/')"
+            >
+                ÷
+            </button>
+
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('7')"
+            >
+                7
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('8')"
+            >
+                8
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('9')"
+            >
+                9
+            </button>
+
+            <button
+                class="calc-btn operator"
+                onclick="calculatorInput('*')"
+            >
+                ×
+            </button>
+
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('4')"
+            >
+                4
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('5')"
+            >
+                5
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('6')"
+            >
+                6
+            </button>
+
+            <button
+                class="calc-btn operator"
+                onclick="calculatorInput('-')"
+            >
+                −
+            </button>
+
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('1')"
+            >
+                1
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('2')"
+            >
+                2
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('3')"
+            >
+                3
+            </button>
+
+            <button
+                class="calc-btn operator"
+                onclick="calculatorInput('+')"
+            >
+                +
+            </button>
+
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('0')"
+            >
+                0
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('.')"
+            >
+                .
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput('(')"
+            >
+                (
+            </button>
+
+            <button
+                class="calc-btn"
+                onclick="calculatorInput(')')"
+            >
+                )
+            </button>
+
+
+            <button
+                class="calc-btn equal"
+                style="grid-column:1 / -1;"
+                onclick="calculatorCalculate()"
+            >
+                =
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="calc-history">
+
+        <h3>
+            Calculation History
+        </h3>
+
+        <div
+            class="history-list"
+            id="historyList"
+        >
+            <div class="history-item">
+                No calculations yet
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     CONVERTER TAB
+     ===================================================== -->
+
+<div
+    id="converterTab"
+    class="tab-content"
+>
+
+<div class="tool-card">
+
+    <div class="tool-header">
+
+        <div class="tool-icon">
+            📐
+        </div>
+
+        <div>
+
+            <h2>
+                Length Unit Converter
+            </h2>
+
+            <p>
+                Convert mm, cm, m, inch, feet and yard
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="converter">
+
+
+        <div class="converter-grid">
+
+
+            <div class="form-group">
+
+                <label>
+                    Value
+                </label>
+
+                <input
+                    type="number"
+                    id="convertValue"
+                    value="1"
+                    step="any"
+                    oninput="convertUnit()"
+                >
+
+            </div>
+
+
+            <button
+                class="swap-button"
+                onclick="swapUnits()"
+                title="Swap units"
+            >
+                ⇄
+            </button>
+
+
+            <div class="form-group">
+
+                <label>
+                    From Unit
+                </label>
+
+                <select
+                    id="fromUnit"
+                    onchange="convertUnit()"
+                >
+
+                    <option value="mm">
+                        Millimeter (mm)
+                    </option>
+
+                    <option value="cm">
+                        Centimeter (cm)
+                    </option>
+
+                    <option
+                        value="m"
+                        selected
+                    >
+                        Meter (m)
+                    </option>
+
+                    <option value="inch">
+                        Inch (in)
+                    </option>
+
+                    <option value="ft">
+                        Feet (ft)
+                    </option>
+
+                    <option value="yd">
+                        Yard (yd)
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            class="form-group"
+            style="margin-top:12px;"
+        >
+
+            <label>
+                To Unit
+            </label>
+
+            <select
+                id="toUnit"
+                onchange="convertUnit()"
+            >
+
+                <option value="mm">
+                    Millimeter (mm)
+                </option>
+
+                <option value="cm">
+                    Centimeter (cm)
+                </option>
+
+                <option
+                    value="m"
+                >
+                    Meter (m)
+                </option>
+
+                <option
+                    value="inch"
+                    selected
+                >
+                    Inch (in)
+                </option>
+
+                <option value="ft">
+                    Feet (ft)
+                </option>
+
+                <option value="yd">
+                    Yard (yd)
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="convert-result">
+
+            <div class="result-label">
+                Result
+            </div>
+
+            <div
+                class="result-value"
+                id="convertResult"
+            >
+                39.370079 in
+            </div>
+
+            <div
+                class="result-equation"
+                id="convertEquation"
+            >
+                1 m = 39.370079 in
+            </div>
+
+        </div>
+
+
+        <div class="converter-actions">
+
+            <button
+                class="action-button"
+                onclick="clearConverter()"
+            >
+                Clear
+            </button>
+
+            <button
+                class="action-button primary"
+                onclick="convertUnit()"
+            >
+                Convert
+            </button>
+
+        </div>
+
+
+        <div class="quick-conversions">
+
+            <div class="quick-card">
+
+                <strong>
+                    1 m
+                </strong>
+
+                <span>
+                    1000 mm
+                </span>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <strong>
+                    1 m
+                </strong>
+
+                <span>
+                    100 cm
+                </span>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <strong>
+                    1 m
+                </strong>
+
+                <span>
+                    39.3701 inch
+                </span>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <strong>
+                    1 inch
+                </strong>
+
+                <span>
+                    25.4 mm
+                </span>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <strong>
+                    1 ft
+                </strong>
+
+                <span>
+                    304.8 mm
+                </span>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <strong>
+                    1 yd
+                </strong>
+
+                <span>
+                    0.9144 m
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TNB BILL PDF TAB
+     ===================================================== -->
+
+<div
+    id="tnbBillTab"
+    class="tab-content"
+>
+
+<div class="tool-card">
+
+    <div class="tool-header">
+
+        <div class="tool-icon">
+            🧾
+        </div>
+
+        <div>
+
+            <h2>
+                TNB Bill Address Extractor
+            </h2>
+
+            <p>
+                Upload a 2-page TNB bill and extract the address below "ALAMAT PREMIS" from page 2.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="pdf-reader">
+
+        <div
+            class="pdf-upload-box"
+            id="tnbPdfUploadBox"
+        >
+
+            <div class="pdf-upload-icon">
+                🧾
+            </div>
+
+            <h2>
+                Upload TNB Bill PDF
+            </h2>
+
+            <p>
+                Select or drag & drop your TNB bill PDF here.
+            </p>
+
+            <label
+                for="tnbPdfFile"
+                class="upload-button"
+            >
+                📁 Choose TNB Bill PDF
+            </label>
+
+            <input
+                type="file"
+                id="tnbPdfFile"
+                accept=".pdf,application/pdf"
+            >
+
+            <div class="drop-text">
+                PDF should contain the "ALAMAT PREMIS" section on page 2.
+            </div>
+
+            <div
+                class="pdf-file-name"
+                id="tnbPdfFileName"
+            >
+                No file selected
+            </div>
+
+        </div>
+
+
+        <div
+            class="pdf-status"
+            id="tnbPdfStatus"
+        ></div>
+
+
+        <div
+            class="pdf-result"
+            id="tnbPdfResult"
+        >
+
+            <div class="pdf-result-card">
+
+                <div class="pdf-result-title">
+
+                    <div class="card-icon">
+                        📍
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Extracted Premis Address
+                        </h3>
+
+                        <span>
+                            Address detected from page 2 below "ALAMAT PREMIS"
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    class="pdf-address"
+                    id="tnbAddressText"
+                    readonly
+                ></textarea>
+
+
+                <div class="pdf-actions">
+
+                    <button
+                        class="action-button primary"
+                        onclick="copyTnbAddress()"
+                    >
+                        📋 Copy Address
+                    </button>
+
+                    <button
+                        class="action-button"
+                        onclick="clearTnbPdf()"
+                    >
+                        ↻ Clear
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="pdf-page-note"
+                    id="tnbPdfPageNote"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+
+    Solar Project Quick View • Calculator • Unit Converter • TNB Bill
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   TAB SYSTEM
+   ============================================================ */
+
+function openTab(
+    tabId,
+    button
+)
+{
+
+    const tabs =
+        document.querySelectorAll(
+            ".tab-content"
+        );
+
+    tabs.forEach(
+        tab => {
+            tab.classList.remove(
+                "active"
+            );
+        }
+    );
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".tab-button"
+        );
+
+    buttons.forEach(
+        btn => {
+            btn.classList.remove(
+                "active"
+            );
+        }
+    );
+
+
+    document
+        .getElementById(tabId)
+        .classList.add("active");
+
+
+    button.classList.add("active");
+
+}
+
+
+/* ============================================================
+   ELEMENTS
+   ============================================================ */
+
+const excelInput =
+    document.getElementById(
+        "excelFile"
+    );
+
+const uploadBox =
+    document.getElementById(
+        "uploadBox"
+    );
+
+
+/* ============================================================
+   NORMAL FILE PICKER
+   ============================================================ */
+
+excelInput.addEventListener(
+    "change",
+    function(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        document.getElementById(
+            "fileName"
+        ).textContent =
+            file.name;
+
+        processExcelFile(file);
+
+    }
+);
+
+
+/* ============================================================
+   DRAG OVER
+   ============================================================ */
+
+uploadBox.addEventListener(
+    "dragover",
+    function(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        uploadBox.classList.add(
+            "drag-over"
+        );
+
+    }
+);
+
+
+/* ============================================================
+   DRAG ENTER
+   ============================================================ */
+
+uploadBox.addEventListener(
+    "dragenter",
+    function(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        uploadBox.classList.add(
+            "drag-over"
+        );
+
+    }
+);
+
+
+/* ============================================================
+   DRAG LEAVE
+   ============================================================ */
+
+uploadBox.addEventListener(
+    "dragleave",
+    function(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        uploadBox.classList.remove(
+            "drag-over"
+        );
+
+    }
+);
+
+
+/* ============================================================
+   DROP EXCEL
+   ============================================================ */
+
+uploadBox.addEventListener(
+    "drop",
+    function(event) {
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+        uploadBox.classList.remove(
+            "drag-over"
+        );
+
+
+        const files =
+            event.dataTransfer.files;
+
+
+        if (
+            !files ||
+            files.length === 0
+        ) {
+            return;
+        }
+
+
+        const file =
+            files[0];
+
+
+        const validExtension =
+            /\.(xlsx|xls)$/i.test(
+                file.name
+            );
+
+
+        if (!validExtension) {
+
+            showError(
+                "Please upload an Excel file (.xlsx or .xls)."
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const dataTransfer =
+                new DataTransfer();
+
+            dataTransfer.items.add(file);
+
+            excelInput.files =
+                dataTransfer.files;
+
+        }
+
+        catch(error) {
+
+            console.warn(
+                "Could not assign dropped file:",
+                error
+            );
+
+        }
+
+
+        document.getElementById(
+            "fileName"
+        ).textContent =
+            file.name;
+
+
+        processExcelFile(file);
+
+    }
+);
+
+
+/* ============================================================
+   PROCESS EXCEL FILE
+   ============================================================ */
+
+function processExcelFile(file)
+{
+
+    if (
+        typeof XLSX === "undefined"
+    ) {
+
+        showError(
+            "Excel reader library could not be loaded. " +
+            "Please check your internet connection."
+        );
+
+        return;
+
+    }
+
+
+    const reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e) {
+
+            try {
+
+                const workbook =
+                    XLSX.read(
+                        e.target.result,
+                        {
+                            type: "array",
+                            cellFormula: true,
+                            cellHTML: false,
+                            cellText: true
+                        }
+                    );
+
+
+                if (
+                    !workbook.SheetNames ||
+                    workbook.SheetNames.length === 0
+                ) {
+
+                    throw new Error(
+                        "No worksheet found."
+                    );
+
+                }
+
+
+                const sheet =
+                    findBestWorksheet(
+                        workbook
+                    );
+
+
+                if (!sheet) {
+
+                    throw new Error(
+                        "Cannot find a usable worksheet."
+                    );
+
+                }
+
+
+                const templateType =
+                    detectTemplate(
+                        sheet
+                    );
+
+
+                document.getElementById(
+                    "templateBadge"
+                ).textContent =
+                    "Detected: " +
+                    templateType;
+
+
+                const data =
+                    extractProjectData(
+                        sheet,
+                        templateType
+                    );
+
+
+                console.log(
+                    "FINAL EXTRACTED DATA:",
+                    data
+                );
+
+
+                displayProjectData(
+                    data
+                );
+
+
+                hideError();
+
+
+                document.getElementById(
+                    "dashboard"
+                ).style.display =
+                    "block";
+
+
+                document.getElementById(
+                    "dashboard"
+                ).scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            }
+
+            catch(error) {
+
+                console.error(
+                    "Excel reading error:",
+                    error
+                );
+
+                showError(
+                    "Cannot read Excel file: " +
+                    error.message
+                );
+
+            }
+
+        };
+
+
+    reader.onerror =
+        function() {
+
+            showError(
+                "The browser could not read this file."
+            );
+
+        };
+
+
+    reader.readAsArrayBuffer(
+        file
+    );
+
+}
+
+
+/* ============================================================
+   FIND BEST WORKSHEET
+   ============================================================ */
+
+function findBestWorksheet(workbook)
+{
+
+    let bestSheet = null;
+
+    let bestScore = -1;
+
+
+    workbook.SheetNames.forEach(
+        function(sheetName) {
+
+            const sheet =
+                workbook.Sheets[sheetName];
+
+
+            if (!sheet) {
+                return;
+            }
+
+
+            let score = 0;
+
+
+            const importantLabels = [
+
+                "CLIENT/COMPANY NAME",
+                "PROJECT NAME",
+                "SITE LOCATION",
+                "SITE LOCATION / GPS",
+                "ADDRESS",
+                "PV MODULE",
+                "PREFERRED PV MODULE",
+                "INVERTER MODEL",
+                "INVERTER'S MODEL",
+                "BATTERY BRAND",
+                "TNB METER",
+                "TNB NO.",
+                "INSTALLED CAPACITY",
+                "BD PIC",
+                "BD NAME"
+
+            ];
+
+
+            importantLabels.forEach(
+                function(label) {
+
+                    if (
+                        worksheetContainsLabel(
+                            sheet,
+                            label
+                        )
+                    ) {
+
+                        score += 10;
+
+                    }
+
+                }
+            );
+
+
+            if (
+                workbook.SheetNames[0] ===
+                sheetName
+            ) {
+
+                score += 2;
+
+            }
+
+
+            if (
+                score > bestScore
+            ) {
+
+                bestScore = score;
+
+                bestSheet = sheet;
+
+            }
+
+        }
+    );
+
+
+    if (bestSheet) {
+
+        bestSheet.__sheetName =
+            workbook.SheetNames.find(
+                name =>
+                    workbook.Sheets[name] ===
+                    bestSheet
+            );
+
+    }
+
+
+    return bestSheet;
+
+}
+
+
+/* ============================================================
+   DETECT TEMPLATE
+   ============================================================ */
+
+function detectTemplate(sheet)
+{
+
+    const newTemplateScore =
+        countLabels(
+            sheet,
+            [
+
+                "CLIENT/COMPANY NAME",
+                "SITE LOCATION / GPS",
+                "BD PIC",
+                "PREFERED PV MODULE'S BRAND",
+                "PREFERRED PV MODULE'S BRAND",
+                "PV MODULE'S MODEL",
+                "INVERTER MODEL",
+                "TNB METER",
+                "BATTERY BRAND",
+                "TNB NO.",
+                "INSTALLED CAPCAITY",
+                "INSTALLED CAPACITY"
+
+            ]
+        );
+
+
+    const originalTemplateScore =
+        countLabels(
+            sheet,
+            [
+
+                "PERSONAL INFORMATION",
+                "ADDRESS (PREMIS)",
+                "BD NAME",
+                "TNB METER",
+                "MODULE BRAND",
+                "MODULE POWER",
+                "PANEL QUANTITY",
+                "INVERTER BRAND",
+                "INVERTER MODEL"
+
+            ]
+        );
+
+
+    if (
+        newTemplateScore >=
+        originalTemplateScore &&
+        newTemplateScore >= 2
+    ) {
+
+        return "Template 2";
+
+    }
+
+
+    if (
+        originalTemplateScore >= 2
+    ) {
+
+        return "Template 1";
+
+    }
+
+
+    return "Flexible / Auto Detected";
+
+}
+
+
+/* ============================================================
+   CHECK IF A VALUE IS ACTUALLY A TEMPLATE HEADER/LABEL
+   ============================================================ */
+
+function isDisallowedLabelValue(value)
+{
+    if (!value || value === "-") return true;
+
+    const norm = normalizeLabel(value);
+
+    // Reject template sections and field titles
+    if (/^SECTION\s*\d+/i.test(norm)) return true;
+    if (norm === "BATTERY BRAND" || norm === "BATTERY MODEL" || norm === "BATTERY CAPACITY" || norm === "BATTERY AH" || norm === "BATTERY QUANTITY" || norm === "BATTERY QTY") return true;
+    if (norm === "WIREMAN DETAILS" || norm === "WIREMAN NAME" || norm === "MYKAD" || norm === "COMPANY NAME" || norm === "REGISTRATION NO") return true;
+    if (norm === "INVERTER BRAND" || norm === "INVERTER MODEL" || norm === "MODULE BRAND" || norm === "MODULE POWER") return true;
+
+    return false;
+}
+
+
+/* ============================================================
+   EXTRACT PROJECT DATA
+   ============================================================ */
+
+function extractProjectData(
+    sheet,
+    templateType
+)
+{
+
+    let name =
+        findValueByLabels(
+            sheet,
+            [
+
+                "CLIENT/COMPANY NAME",
+                "CUSTOMER NAME",
+                "CLIENT NAME",
+                "PERSONAL NAME",
+                "NAME"
+
+            ]
+        );
+
+
+    if (name === "-") {
+
+        name =
+            readFirstAvailable(
+                sheet,
+                [
+                    "C7",
+                    "C6"
+                ]
+            );
+
+    }
+
+
+    /* --------------------------------------------------------
+       ADDRESS EXTRACTION:
+       Combines 3 rows of Address (Premis) + Postcode + Town + State
+       -------------------------------------------------------- */
+    let address = "-";
+
+    const fixedAddressParts = [
+        readCell(sheet, "C11"),                                // Address line 1
+        readCell(sheet, "C12"),                                // Address line 2
+        readCell(sheet, "C13"),                                // Address line 3
+        readCell(sheet, "C14").replace(/,/g, "").trim(),       // Postcode (strip comma)
+        readCell(sheet, "C15"),                                // Town
+        readCell(sheet, "C16")                                 // State
+    ].filter(value => value !== "-" && value !== "");
+
+    if (fixedAddressParts.length >= 2) {
+        address = fixedAddressParts.join(", ");
+    } else {
+        const dynamicAddress = extractMultiLinePremisAddress(sheet);
+        if (dynamicAddress !== "-") {
+            address = dynamicAddress;
+        } else {
+            address = findValueByLabels(
+                sheet,
+                [
+                    "SITE LOCATION / GPS",
+                    "ADDRESS (PREMIS)",
+                    "ADDRESS",
+                    "SITE LOCATION",
+                    "PREMIS ADDRESS",
+                    "INSTALLATION ADDRESS"
+                ]
+            );
+        }
+    }
+
+
+    let bdName =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+
+                "BD NAME",
+                "BD PIC",
+                "BD PERSON",
+                "BUSINESS DEVELOPMENT",
+                "BUSINESS DEVELOPMENT PIC"
+
+            ]
+        );
+
+
+    if (bdName === "-") {
+
+        bdName =
+            readFirstAvailable(
+                sheet,
+                [
+                    "L6",
+                    "C98"
+                ]
+            );
+
+    }
+
+
+    let tnbMeter =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+
+                "TNB METER",
+                "TNB NO.",
+                "TNB NUMBER",
+                "TNB METER NO",
+                "TNB METER NUMBER"
+
+            ]
+        );
+
+
+    if (tnbMeter === "-") {
+
+        tnbMeter =
+            readFirstAvailable(
+                sheet,
+                [
+                    "L49",
+                    "D54"
+                ]
+            );
+
+    }
+
+
+    let kwac =
+        findValueByLabels(
+            sheet,
+            [
+
+                "AC CAPACITY",
+                "SYSTEM SIZE AC",
+                "SYSTEM CAPACITY",
+                "INSTALLED CAPACITY",
+                "INSTALLED CAPCAITY",
+                "PROPOSED CAPACITY"
+
+            ]
+        );
+
+
+    if (kwac === "-") {
+
+        kwac =
+            readCell(
+                sheet,
+                "C27"
+            );
+
+    }
+
+
+    let kwp =
+        findValueByLabels(
+            sheet,
+            [
+
+                "KWP",
+                "SYSTEM SIZE",
+                "SYSTEM SIZE (KWP)",
+                "PV CAPACITY",
+                "INSTALLED CAPACITY (KWP)",
+                "INSTALLED CAPCAITY (KWP)"
+
+            ]
+        );
+
+
+    if (kwp === "-") {
+
+        kwp =
+            readCell(
+                sheet,
+                "C28"
+            );
+
+    }
+
+
+    if (kwp === "-") {
+
+        kwp =
+            findValueNearLabel(
+                sheet,
+                [
+
+                    "INSTALLED CAPACITY (KWP)",
+                    "INSTALLED CAPCAITY (KWP)",
+                    "INSTALLED CAPACITY"
+
+                ]
+            );
+
+    }
+
+
+    let moduleBrand =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+
+                "MODULE BRAND",
+                "PV MODULE BRAND",
+                "PREFERED PV MODULE'S BRAND",
+                "PREFERRED PV MODULE'S BRAND",
+                "PREFERRED PV MODULE BRAND"
+
+            ]
+        );
+
+
+    if (moduleBrand === "-") {
+
+        moduleBrand =
+            readFirstAvailable(
+                sheet,
+                [
+                    "C44",
+                    "D11"
+                ]
+            );
+
+    }
+
+
+    let modulePower =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+
+                "MODULE POWER",
+                "PV MODULE POWER",
+                "PV MODULE'S MODEL",
+                "PV MODULE MODEL",
+                "MODULE MODEL"
+
+            ]
+        );
+
+
+    if (modulePower === "-") {
+
+        modulePower =
+            readFirstAvailable(
+                sheet,
+                [
+                    "C47",
+                    "D12"
+                ]
+            );
+
+    }
+
+
+    let moduleQuantity =
+        findValueByLabels(
+            sheet,
+            [
+
+                "PANEL QUANTITY",
+                "MODULE QUANTITY",
+                "PV MODULE QUANTITY",
+                "NUMBER OF MODULE",
+                "NO. OF MODULE",
+                "NUMBER OF PANELS"
+
+            ]
+        );
+
+
+    if (moduleQuantity === "-") {
+
+        moduleQuantity =
+            readFirstAvailable(
+                sheet,
+                [
+                    "C48"
+                ]
+            );
+
+    }
+
+
+    if (
+        moduleQuantity === "-" ||
+        moduleQuantity === ""
+    ) {
+
+        moduleQuantity =
+            calculatePanelQuantity(
+                kwp,
+                modulePower
+            );
+
+    }
+
+
+    let inverterBrand =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+
+                "INVERTER BRAND",
+                "PREFERED INVERTER'S BRAND",
+                "PREFERRED INVERTER'S BRAND",
+                "PREFERRED INVERTER BRAND"
+
+            ]
+        );
+
+
+    if (inverterBrand === "-") {
+
+        inverterBrand =
+            readFirstAvailable(
+                sheet,
+                [
+                    "C50",
+                    "J11"
+                ]
+            );
+
+    }
+
+
+    let inverterModel =
+        findInverterModel(
+            sheet
+        );
+
+
+    let inverterQuantity =
+        findValueByLabels(
+            sheet,
+            [
+                "INVERTER QUANTITY",
+                "INVERTER QTY",
+                "NUMBER OF INVERTER",
+                "NO. OF INVERTER",
+                "NO OF INVERTER",
+                "NUMBER OF INVERTERS",
+                "INVERTER UNITS",
+                "INVERTER COUNT"
+            ]
+        );
+
+
+    if (inverterQuantity === "-") {
+
+        inverterQuantity =
+            findValueNextToAnyLabel(
+                sheet,
+                [
+                    "INVERTER QUANTITY",
+                    "INVERTER QTY",
+                    "NUMBER OF INVERTER",
+                    "NO. OF INVERTER",
+                    "NO OF INVERTER"
+                ]
+            );
+
+    }
+
+
+    if (inverterQuantity === "-") {
+
+        inverterQuantity =
+            readCell(
+                sheet,
+                "C53"
+            );
+
+    }
+
+
+    if (
+        inverterQuantity === "-" &&
+        inverterModel !== "-"
+    ) {
+
+        inverterQuantity = "1";
+
+    }
+
+
+    const mpptNumber =
+        getMPPTNumber(
+            inverterModel
+        );
+
+
+    const maxOutputCurrent =
+        getMaxOutputCurrent(
+            inverterModel
+        );
+
+
+    /* --------------------------------------------------------
+       BATTERY STORAGE EXTRACTION:
+       Checks explicitly if Battery Storage is "NO" or empty.
+       -------------------------------------------------------- */
+    let hasBatteryStorage = true;
+
+    const batteryStorageFlag = findValueNextToAnyLabel(sheet, ["BATTERY STORAGE", "BATTERY STORAGE SYSTEM"]);
+    if (batteryStorageFlag !== "-" && /^NO\b/i.test(batteryStorageFlag.trim())) {
+        hasBatteryStorage = false;
+    }
+
+    let batteryBrand = "-";
+    let batteryModel = "-";
+    let batteryQuantity = "-";
+
+    if (hasBatteryStorage) {
+
+        const directBrand = readCell(sheet, "C55");
+        const directModel = readCell(sheet, "C56");
+        const directQty = readCell(sheet, "C58");
+
+        batteryBrand = (directBrand !== "-" && !isDisallowedLabelValue(directBrand))
+            ? directBrand
+            : findValueNextToAnyLabel(sheet, ["BATTERY BRAND"]);
+
+        batteryModel = (directModel !== "-" && !isDisallowedLabelValue(directModel))
+            ? directModel
+            : findValueNextToAnyLabel(sheet, ["BATTERY MODEL", "BATTERY CAPACITY", "BATTERY MODEL / CAPACITY"]);
+
+        batteryQuantity = (directQty !== "-" && !isDisallowedLabelValue(directQty))
+            ? directQty
+            : findValueByLabels(sheet, ["BATTERY QUANTITY", "BATTERY QTY", "NUMBER OF BATTERY", "NO. OF BATTERY"]);
+
+        if (isDisallowedLabelValue(batteryBrand)) batteryBrand = "-";
+        if (isDisallowedLabelValue(batteryModel)) batteryModel = "-";
+        if (isDisallowedLabelValue(batteryQuantity)) batteryQuantity = "-";
+
+        if (batteryQuantity === "-" && batteryBrand !== "-" && batteryModel !== "-") {
+            batteryQuantity = "1";
+        }
+
+    }
+
+
+    /* --------------------------------------------------------
+       ADD-ON ITEMS EXTRACTION (SECTION 6: OFFICE USE):
+       Busbar Combiner Box, Optimizer, Ballast, RSD, Battery Stand
+       -------------------------------------------------------- */
+    let addonBusbar =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+                "ADD ON: BUSBAR COMBINER BOX",
+                "ADD ON BUSBAR COMBINER BOX",
+                "ADD-ON: BUSBAR COMBINER BOX",
+                "ADD-ON BUSBAR COMBINER BOX",
+                "BUSBAR COMBINER BOX",
+                "BUSBAR COMBINER",
+                "BUSBAR BOX",
+                "COMBINER BOX"
+            ]
+        );
+
+    let addonOptimizer =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+                "ADD ON: OPTIMIZER",
+                "ADD ON OPTIMIZER",
+                "ADD-ON: OPTIMIZER",
+                "ADD-ON OPTIMIZER",
+                "OPTIMIZER",
+                "OPTIMIZERS",
+                "SOLAR OPTIMIZER",
+                "MODULE OPTIMIZER"
+            ]
+        );
+
+    let addonBallast =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+                "ADD ON: BALLAST",
+                "ADD ON BALLAST",
+                "ADD-ON: BALLAST",
+                "ADD-ON BALLAST",
+                "BALLAST",
+                "BALLAST SYSTEM",
+                "BALLAST MOUNTING"
+            ]
+        );
+
+    let addonRsd =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+                "ADD ON: RSD",
+                "ADD ON RSD",
+                "ADD-ON: RSD",
+                "ADD-ON RSD",
+                "RSD",
+                "RAPID SHUTDOWN",
+                "RAPID SHUTDOWN DEVICE"
+            ]
+        );
+
+    let addonBatteryStand =
+        findValueNextToAnyLabel(
+            sheet,
+            [
+                "ADD ON: BATTERY STAND",
+                "ADD ON BATTERY STAND",
+                "ADD-ON: BATTERY STAND",
+                "ADD-ON BATTERY STAND",
+                "BATTERY STAND",
+                "BATTERY RACK",
+                "STAND BATTERY"
+            ]
+        );
+
+
+    return {
+
+        name:
+            cleanValue(name),
+
+        address:
+            cleanValue(address),
+
+        bdName:
+            cleanValue(bdName),
+
+        tnbMeter:
+            cleanValue(tnbMeter),
+
+        kwac:
+            cleanValue(kwac),
+
+        kwp:
+            cleanValue(kwp),
+
+        moduleBrand:
+            cleanValue(moduleBrand),
+
+        modulePower:
+            cleanValue(modulePower),
+
+        moduleQuantity:
+            cleanValue(moduleQuantity),
+
+        inverterBrand:
+            cleanValue(inverterBrand),
+
+        inverterModel:
+            cleanValue(inverterModel),
+
+        inverterQuantity:
+            cleanValue(inverterQuantity),
+
+        mpptNumber:
+            mpptNumber,
+
+        maxOutputCurrent:
+            maxOutputCurrent,
+
+        batteryBrand:
+            cleanValue(batteryBrand),
+
+        batteryModel:
+            cleanValue(batteryModel),
+
+        batteryQuantity:
+            cleanValue(batteryQuantity),
+
+        addonBusbar:
+            cleanValue(addonBusbar),
+
+        addonOptimizer:
+            cleanValue(addonOptimizer),
+
+        addonBallast:
+            cleanValue(addonBallast),
+
+        addonRsd:
+            cleanValue(addonRsd),
+
+        addonBatteryStand:
+            cleanValue(addonBatteryStand)
+
+    };
+
+}
+
+
+/* ============================================================
+   EXTRACT MULTI-LINE PREMIS ADDRESS (DYNAMIC SEARCH)
+   ============================================================ */
+
+function extractMultiLinePremisAddress(sheet)
+{
+    if (!sheet || !sheet["!ref"]) return "-";
+
+    const range = XLSX.utils.decode_range(sheet["!ref"]);
+
+    for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let col = range.s.c; col <= range.e.c; col++) {
+            const addr = XLSX.utils.encode_cell({ r: row, c: col });
+            const cell = sheet[addr];
+            if (!cell) continue;
+
+            const text = normalizeLabel(getCellRawValue(cell));
+
+            if (text === "ADDRESS (PREMIS)" || text === "ADDRESS(PREMIS)") {
+                const parts = [];
+
+                for (let rOffset = 0; rOffset < 3; rOffset++) {
+                    const cAddr = XLSX.utils.encode_cell({ r: row + rOffset, c: col + 1 });
+                    const val = readCellObject(sheet[cAddr]);
+                    if (val !== "-" && val !== "") parts.push(val);
+                }
+
+                for (let rOffset = 3; rOffset < 6; rOffset++) {
+                    const cAddr = XLSX.utils.encode_cell({ r: row + rOffset, c: col + 1 });
+                    let val = readCellObject(sheet[cAddr]);
+                    if (val !== "-" && val !== "") {
+                        // Strip comma if it's the postcode (digits)
+                        if (/^\d{1,3}(,\d{3})+$/.test(val.trim())) {
+                            val = val.replace(/,/g, "").trim();
+                        }
+                        parts.push(val);
+                    }
+                }
+
+                if (parts.length > 0) {
+                    return parts.join(", ");
+                }
+            }
+        }
+    }
+
+    return "-";
+}
+
+
+/* ============================================================
+   OPEN ADDRESS IN GOOGLE MAPS
+   ============================================================ */
+
+function openInGoogleMaps()
+{
+    const addressElement =
+        document.getElementById(
+            "address"
+        );
+
+    if (!addressElement) return;
+
+    const rawAddress =
+        addressElement.textContent.trim();
+
+    if (!rawAddress || rawAddress === "-") {
+        alert("Please upload an Excel file with an address first.");
+        return;
+    }
+
+    const mapsUrl =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        encodeURIComponent(rawAddress);
+
+    window.open(
+        mapsUrl,
+        "_blank",
+        "noopener,noreferrer"
+    );
+}
+
+
+/* ============================================================
+   FIND INVERTER MODEL
+   ============================================================ */
+
+function findInverterModel(sheet)
+{
+
+    const labels = [
+
+        "INVERTER MODEL",
+        "INVERTER'S MODEL",
+        "INVERTER MODEL NO",
+        "INVERTER MODEL NO.",
+        "INVERTER MODEL NUMBER",
+        "INVERTER'S MODEL NO",
+        "INVERTER'S MODEL NO.",
+        "PREFERRED INVERTER MODEL",
+        "PREFERED INVERTER MODEL",
+        "PREFERRED INVERTER'S MODEL",
+        "PREFERED INVERTER'S MODEL"
+
+    ];
+
+
+    let model =
+        findValueNextToAnyLabel(
+            sheet,
+            labels
+        );
+
+
+    if (
+        model !== "-" &&
+        looksLikeInverterModel(model)
+    ) {
+
+        return model;
+
+    }
+
+
+    const range =
+        XLSX.utils.decode_range(
+            sheet["!ref"]
+        );
+
+
+    const normalizedLabels =
+        labels.map(
+            label =>
+                normalizeLabel(label)
+        );
+
+
+    for (
+        let row = range.s.r;
+        row <= range.e.r;
+        row++
+    ) {
+
+        for (
+            let col = range.s.c;
+            col <= range.e.c;
+            col++
+        ) {
+
+            const address =
+                XLSX.utils.encode_cell({
+                    r: row,
+                    c: col
+                });
+
+
+            const cell =
+                sheet[address];
+
+
+            if (!cell) {
+                continue;
+            }
+
+
+            const cellText =
+                normalizeLabel(
+                    getCellRawValue(
+                        cell
+                    )
+                );
+
+
+            if (
+                !normalizedLabels.includes(
+                    cellText
+                )
+            ) {
+
+                continue;
+
+            }
+
+
+            for (
+                let offset = 1;
+                offset <= 10;
+                offset++
+            ) {
+
+                const testAddress =
+                    XLSX.utils.encode_cell({
+                        r: row,
+                        c: col + offset
+                    });
+
+
+                const testCell =
+                    sheet[testAddress];
+
+
+                if (!testCell) {
+                    continue;
+                }
+
+
+                const value =
+                    readCellObject(
+                        testCell
+                    );
+
+
+                if (
+                    value !== "-" &&
+                    looksLikeInverterModel(
+                        value
+                    )
+                ) {
+
+                    return value;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    const fallback =
+        readFirstAvailable(
+            sheet,
+            [
+                "C51",
+                "J12",
+                "D12",
+                "L12",
+                "H12"
+            ]
+        );
+
+
+    if (
+        fallback !== "-" &&
+        looksLikeInverterModel(
+            fallback
+        )
+    ) {
+
+        return fallback;
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   INVERTER MODEL CHECK
+   ============================================================ */
+
+function looksLikeInverterModel(value)
+{
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return false;
+
+    }
+
+
+    const text =
+        String(value)
+            .trim();
+
+
+    if (!text) {
+        return false;
+    }
+
+
+    if (
+        text === "-" ||
+        text.length < 2
+    ) {
+
+        return false;
+
+    }
+
+
+    const normalized =
+        normalizeInverterModel(
+            text
+        );
+
+
+    const rejected = [
+
+        "INVERTER",
+        "INVERTERMODEL",
+        "INVERTERBRAND",
+        "MODEL",
+        "BRAND",
+        "BATTERY",
+        "PVMODULE",
+        "SECTION4:WIREMAN DETAILS"
+
+    ];
+
+
+    if (
+        rejected.includes(
+            normalized
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        /^HIS[-]?[A-Z0-9]+/i.test(text) ||
+        /^HIT[-]?[A-Z0-9]+/i.test(text)
+    ) {
+
+        return true;
+
+    }
+
+
+    if (/SUN2000/i.test(text)) {
+        return true;
+    }
+
+    if (/SG\d/i.test(text)) {
+        return true;
+    }
+
+    if (/GOODWE/i.test(text)) {
+        return true;
+    }
+
+    if (/FRONIUS/i.test(text)) {
+        return true;
+    }
+
+    if (/GROWATT/i.test(text)) {
+        return true;
+    }
+
+
+    if (
+        /[A-Z]/i.test(text) &&
+        /\d/.test(text)
+    ) {
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* ============================================================
+   DISPLAY PROJECT DATA
+   ============================================================ */
+
+function displayProjectData(data)
+{
+
+    setText(
+        "projectName",
+        data.name
+    );
+
+    setText(
+        "name",
+        data.name
+    );
+
+    setText(
+        "bdName",
+        data.bdName
+    );
+
+    setText(
+        "tnbMeter",
+        data.tnbMeter
+    );
+
+    setText(
+        "address",
+        data.address
+    );
+
+    setText(
+        "kwac",
+        data.kwac
+    );
+
+    setText(
+        "kwp",
+        data.kwp
+    );
+
+    setText(
+        "panelQty",
+        data.moduleQuantity
+    );
+
+    setText(
+        "moduleBrand",
+        data.moduleBrand
+    );
+
+    setText(
+        "modulePower",
+        formatModulePower(
+            data.modulePower
+        )
+    );
+
+    setText(
+        "moduleQty",
+        data.moduleQuantity
+    );
+
+    setText(
+        "inverterBrand",
+        data.inverterBrand
+    );
+
+    setText(
+        "inverterModel",
+        data.inverterModel
+    );
+
+    setText(
+        "inverterQty",
+        data.inverterQuantity
+    );
+
+    setText(
+        "mpptNumber",
+        data.mpptNumber === "-"
+            ? "-"
+            : data.mpptNumber +
+              " MPPT"
+    );
+
+    setText(
+        "maxOutputCurrent",
+        data.maxOutputCurrent === "-"
+            ? "-"
+            : data.maxOutputCurrent +
+              " A"
+    );
+
+    setText(
+        "batteryBrand",
+        data.batteryBrand
+    );
+
+    setText(
+        "batteryModel",
+        data.batteryModel
+    );
+
+    setText(
+        "batteryQty",
+        data.batteryQuantity
+    );
+
+    renderAddonStatus(
+        "addonBusbar",
+        data.addonBusbar
+    );
+
+    renderAddonStatus(
+        "addonOptimizer",
+        data.addonOptimizer
+    );
+
+    renderAddonStatus(
+        "addonBallast",
+        data.addonBallast
+    );
+
+    renderAddonStatus(
+        "addonRsd",
+        data.addonRsd
+    );
+
+    renderAddonStatus(
+        "addonBatteryStand",
+        data.addonBatteryStand
+    );
+
+}
+
+
+/* ============================================================
+   FORMAT MODULE POWER
+   ============================================================ */
+
+function formatModulePower(value)
+{
+
+    if (
+        !value ||
+        value === "-"
+    ) {
+
+        return "-";
+
+    }
+
+
+    const text =
+        String(value)
+            .trim();
+
+
+    if (/w$/i.test(text)) {
+        return text;
+    }
+
+
+    if (
+        !isNaN(
+            parseFloat(text)
+        )
+    ) {
+
+        return text + " W";
+
+    }
+
+
+    return text;
+
+}
+
+
+/* ============================================================
+   CALCULATE PANEL QUANTITY
+   ============================================================ */
+
+function calculatePanelQuantity(
+    kwp,
+    modulePower
+)
+{
+
+    if (
+        kwp === "-" ||
+        modulePower === "-"
+    ) {
+
+        return "-";
+
+    }
+
+
+    const kwpNumber =
+        parseFloat(
+            String(kwp)
+                .replace(/,/g, "")
+        );
+
+
+    let powerNumber =
+        parseFloat(
+            String(modulePower)
+                .replace(/,/g, "")
+        );
+
+
+    if (
+        isNaN(kwpNumber) ||
+        isNaN(powerNumber) ||
+        powerNumber <= 0
+    ) {
+
+        return "-";
+
+    }
+
+
+    if (
+        powerNumber < 10
+    ) {
+
+        powerNumber *= 1000;
+
+    }
+
+
+    const quantity =
+        Math.round(
+            (
+                kwpNumber * 1000
+            ) /
+            powerNumber
+        );
+
+
+    return quantity > 0
+        ? quantity
+        : "-";
+
+}
+
+
+/* ============================================================
+   GET MPPT NUMBER
+   ============================================================ */
+
+function getMPPTNumber(model)
+{
+
+    if (
+        !model ||
+        model === "-"
+    ) {
+
+        return "-";
+
+    }
+
+
+    const normalizedModel =
+        normalizeInverterModel(
+            model
+        );
+
+
+    const twoMPPTModels = [
+
+        "HIS-3L-G3",
+        "HIS-3.6L-G3",
+        "HIS-4.6L-G3",
+        "HIS-5L-G3",
+        "HIS-6L-G3",
+        "HIT-5L-G3",
+        "HIT-6L-G3"
+
+    ];
+
+
+    if (
+        twoMPPTModels.includes(
+            normalizedModel
+        )
+    ) {
+
+        return 2;
+
+    }
+
+
+    const threeMPPTModels = [
+
+        "HIT-8L-G3",
+        "HIT-10L-G3"
+
+    ];
+
+
+    if (
+        threeMPPTModels.includes(
+            normalizedModel
+        )
+    ) {
+
+        return 3;
+
+    }
+
+
+    const fourMPPTModels = [
+
+        "HIT-12L-G3",
+        "HIT-15L-G3",
+        "HIT-17L-G3",
+        "HIT-20L-G3"
+
+    ];
+
+
+    if (
+        fourMPPTModels.includes(
+            normalizedModel
+        )
+    ) {
+
+        return 4;
+
+    }
+
+
+    if (
+        normalizedModel ===
+        "HIT-21L-G3"
+    ) {
+
+        return 5;
+
+    }
+
+
+    for (
+        const modelName of [
+            ...twoMPPTModels,
+            ...threeMPPTModels,
+            ...fourMPPTModels,
+            "HIT-21L-G3"
+        ]
+    ) {
+
+        if (
+            normalizedModel.includes(
+                modelName
+            )
+        ) {
+
+            if (
+                twoMPPTModels.includes(
+                    modelName
+                )
+            ) {
+                return 2;
+            }
+
+            if (
+                threeMPPTModels.includes(
+                    modelName
+                )
+            ) {
+                return 3;
+            }
+
+            if (
+                fourMPPTModels.includes(
+                    modelName
+                )
+            ) {
+                return 4;
+            }
+
+            if (
+                modelName ===
+                "HIT-21L-G3"
+            ) {
+                return 5;
+            }
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   MAX OUTPUT CURRENT
+   ============================================================ */
+
+function getMaxOutputCurrent(model)
+{
+
+    if (
+        !model ||
+        model === "-"
+    ) {
+
+        return "-";
+
+    }
+
+
+    const normalizedModel =
+        normalizeInverterModel(
+            model
+        );
+
+
+    const currentMap = {
+
+        "HIS-3L-G3": 15,
+        "HIS-3.6L-G3": 16.7,
+        "HIS-4.6L-G3": 20.9,
+        "HIS-5L-G3": 25,
+        "HIS-6L-G3": 30,
+
+        "HIT-5L-G3": 8.3,
+        "HIT-6L-G3": 10,
+        "HIT-8L-G3": 13.3,
+        "HIT-10L-G3": 16.7,
+        "HIT-12L-G3": 20,
+        "HIT-15L-G3": 25,
+        "HIT-17L-G3": 28.3,
+        "HIT-20L-G3": 33.3
+
+    };
+
+
+    if (
+        Object.prototype.hasOwnProperty.call(
+            currentMap,
+            normalizedModel
+        )
+    ) {
+
+        return currentMap[
+            normalizedModel
+        ];
+
+    }
+
+
+    for (
+        const modelName in currentMap
+    ) {
+
+        if (
+            normalizedModel.includes(
+                modelName
+            )
+        ) {
+
+            return currentMap[
+                modelName
+            ];
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   NORMALIZE INVERTER MODEL
+   ============================================================ */
+
+function normalizeInverterModel(model)
+{
+
+    return String(model)
+
+        .trim()
+
+        .toUpperCase()
+
+        .replace(
+            /\s*-\s*/g,
+            "-"
+        )
+
+        .replace(
+            /_/g,
+            "-"
+        )
+
+        .replace(
+            /\s+/g,
+            ""
+        );
+
+}
+
+
+/* ============================================================
+   FIND VALUE BY LABELS
+   ============================================================ */
+
+function findValueByLabels(
+    sheet,
+    labels
+)
+{
+
+    if (
+        !sheet ||
+        !sheet["!ref"]
+    ) {
+
+        return "-";
+
+    }
+
+
+    for (
+        let i = 0;
+        i < labels.length;
+        i++
+    ) {
+
+        const value =
+            findValueByLabel(
+                sheet,
+                labels[i]
+            );
+
+
+        if (
+            value !== "-"
+        ) {
+
+            return value;
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   FIND VALUE NEXT TO ANY LABEL
+   ============================================================ */
+
+function findValueNextToAnyLabel(
+    sheet,
+    labels
+)
+{
+
+    if (
+        !sheet ||
+        !sheet["!ref"]
+    ) {
+
+        return "-";
+
+    }
+
+
+    for (
+        let i = 0;
+        i < labels.length;
+        i++
+    ) {
+
+        const value =
+            findValueNextToLabel(
+                sheet,
+                labels[i]
+            );
+
+
+        if (
+            value !== "-"
+        ) {
+
+            return value;
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   FIND VALUE BY LABEL
+   ============================================================ */
+
+function findValueByLabel(
+    sheet,
+    label
+)
+{
+
+    if (
+        !sheet ||
+        !sheet["!ref"]
+    ) {
+
+        return "-";
+
+    }
+
+
+    const range =
+        XLSX.utils.decode_range(
+            sheet["!ref"]
+        );
+
+
+    const target =
+        normalizeLabel(
+            label
+        );
+
+
+    for (
+        let row = range.s.r;
+        row <= range.e.r;
+        row++
+    ) {
+
+        for (
+            let col = range.s.c;
+            col <= range.e.c;
+            col++
+        ) {
+
+            const address =
+                XLSX.utils.encode_cell({
+                    r: row,
+                    c: col
+                });
+
+
+            const cell =
+                sheet[address];
+
+
+            if (!cell) {
+                continue;
+            }
+
+
+            const cellText =
+                normalizeLabel(
+                    getCellRawValue(
+                        cell
+                    )
+                );
+
+
+            if (
+                cellText === target
+            ) {
+
+                for (
+                    let offset = 1;
+                    offset <= 4;
+                    offset++
+                ) {
+
+                    const valueAddress =
+                        XLSX.utils.encode_cell({
+                            r: row,
+                            c: col + offset
+                        });
+
+
+                    const valueCell =
+                        sheet[valueAddress];
+
+
+                    if (!valueCell) {
+                        continue;
+                    }
+
+
+                    const value =
+                        readCellObject(
+                            valueCell
+                        );
+
+
+                    if (
+                        value !== "-" &&
+                        !isDisallowedLabelValue(value)
+                    ) {
+
+                        return value;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   FIND VALUE NEXT TO LABEL
+   ============================================================ */
+
+function findValueNextToLabel(
+    sheet,
+    label
+)
+{
+
+    if (
+        !sheet ||
+        !sheet["!ref"]
+    ) {
+
+        return "-";
+
+    }
+
+
+    const range =
+        XLSX.utils.decode_range(
+            sheet["!ref"]
+        );
+
+
+    const targetLabel =
+        normalizeLabel(
+            label
+        );
+
+
+    for (
+        let row = range.s.r;
+        row <= range.e.r;
+        row++
+    ) {
+
+        for (
+            let col = range.s.c;
+            col <= range.e.c;
+            col++
+        ) {
+
+            const cellAddress =
+                XLSX.utils.encode_cell({
+                    r: row,
+                    c: col
+                });
+
+
+            const cell =
+                sheet[cellAddress];
+
+
+            if (!cell) {
+                continue;
+            }
+
+
+            const currentText =
+                normalizeLabel(
+                    getCellRawValue(
+                        cell
+                    )
+                );
+
+
+            if (
+                currentText !==
+                targetLabel
+            ) {
+
+                continue;
+
+            }
+
+
+            for (
+                let offset = 1;
+                offset <= 8;
+                offset++
+            ) {
+
+                const address =
+                    XLSX.utils.encode_cell({
+                        r: row,
+                        c: col + offset
+                    });
+
+
+                const valueCell =
+                    sheet[address];
+
+
+                if (!valueCell) {
+                    continue;
+                }
+
+
+                const value =
+                    readCellObject(
+                        valueCell
+                    );
+
+
+                if (
+                    value !== "-" &&
+                    !isDisallowedLabelValue(value)
+                ) {
+
+                    return value;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   FIND VALUE NEAR LABEL
+   ============================================================ */
+
+function findValueNearLabel(
+    sheet,
+    labels
+)
+{
+
+    for (
+        let i = 0;
+        i < labels.length;
+        i++
+    ) {
+
+        const value =
+            findValueByLabel(
+                sheet,
+                labels[i]
+            );
+
+
+        if (
+            value !== "-"
+        ) {
+
+            return value;
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   WORKSHEET CONTAINS LABEL
+   ============================================================ */
+
+function worksheetContainsLabel(
+    sheet,
+    label
+)
+{
+
+    if (
+        !sheet ||
+        !sheet["!ref"]
+    ) {
+
+        return false;
+
+    }
+
+
+    const range =
+        XLSX.utils.decode_range(
+            sheet["!ref"]
+        );
+
+
+    const target =
+        normalizeLabel(
+            label
+        );
+
+
+    for (
+        let row = range.s.r;
+        row <= range.e.r;
+        row++
+    ) {
+
+        for (
+            let col = range.s.c;
+            col <= range.e.c;
+            col++
+        ) {
+
+            const address =
+                XLSX.utils.encode_cell({
+                    r: row,
+                    c: col
+                });
+
+
+            const cell =
+                sheet[address];
+
+
+            if (!cell) {
+                continue;
+            }
+
+
+            const text =
+                normalizeLabel(
+                    getCellRawValue(
+                        cell
+                    )
+                );
+
+
+            if (
+                text === target ||
+                text.includes(target)
+            ) {
+
+                return true;
+
+            }
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* ============================================================
+   COUNT LABELS
+   ============================================================ */
+
+function countLabels(
+    sheet,
+    labels
+)
+{
+
+    let count = 0;
+
+
+    labels.forEach(
+        function(label) {
+
+            if (
+                worksheetContainsLabel(
+                    sheet,
+                    label
+                )
+            ) {
+
+                count++;
+
+            }
+
+        }
+    );
+
+
+    return count;
+
+}
+
+
+/* ============================================================
+   NORMALIZE LABEL
+   ============================================================ */
+
+function normalizeLabel(value)
+{
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .trim()
+
+        .replace(
+            /\s+/g,
+            " "
+        )
+
+        .replace(
+            /[：:]/g,
+            ""
+        )
+
+        .replace(
+            /[-_]/g,
+            " "
+        )
+
+        .replace(
+            /\s+/g,
+            " "
+        )
+
+        .toUpperCase();
+
+}
+
+
+/* ============================================================
+   GET RAW CELL VALUE
+   ============================================================ */
+
+function getCellRawValue(cell)
+{
+
+    if (!cell) {
+        return "";
+    }
+
+
+    let value =
+        cell.v;
+
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+
+        value =
+            cell.w;
+
+    }
+
+
+    return value;
+
+}
+
+
+/* ============================================================
+   READ CELL OBJECT
+   ============================================================ */
+
+function readCellObject(cell)
+{
+
+    if (!cell) {
+        return "-";
+    }
+
+
+    let value =
+        getCellRawValue(
+            cell
+        );
+
+
+    if (
+        value === undefined ||
+        value === null ||
+        String(value).trim() === ""
+    ) {
+
+        return "-";
+
+    }
+
+
+    if (
+        value instanceof Date
+    ) {
+
+        return value.toLocaleString();
+
+    }
+
+
+    if (
+        typeof value === "number"
+    ) {
+
+        // Postcodes / zip codes (5-digit integers) must NOT have commas
+        if (Number.isInteger(value) && value >= 10000 && value <= 99999) {
+            return String(value);
+        }
+
+        return value.toLocaleString(
+            undefined,
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+    }
+
+
+    return String(value)
+        .trim();
+
+}
+
+
+/* ============================================================
+   READ CELL
+   ============================================================ */
+
+function readCell(
+    sheet,
+    cellAddress
+)
+{
+
+    if (!sheet) {
+        return "-";
+    }
+
+
+    const cell =
+        sheet[cellAddress];
+
+
+    if (!cell) {
+        return "-";
+    }
+
+
+    return readCellObject(
+        cell
+    );
+
+}
+
+
+/* ============================================================
+   READ FIRST AVAILABLE
+   ============================================================ */
+
+function readFirstAvailable(
+    sheet,
+    addresses
+)
+{
+
+    for (
+        let i = 0;
+        i < addresses.length;
+        i++
+    ) {
+
+        const value =
+            readCell(
+                sheet,
+                addresses[i]
+            );
+
+
+        if (
+            value !== "-" &&
+            !isDisallowedLabelValue(value)
+        ) {
+
+            return value;
+
+        }
+
+    }
+
+
+    return "-";
+
+}
+
+
+/* ============================================================
+   CLEAN VALUE
+   ============================================================ */
+
+function cleanValue(value)
+{
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "-";
+
+    }
+
+
+    const text =
+        String(value)
+            .trim();
+
+
+    if (
+        text === "" ||
+        text === "undefined" ||
+        text === "null" ||
+        isDisallowedLabelValue(text)
+    ) {
+
+        return "-";
+
+    }
+
+
+    return text;
+
+}
+
+
+/* ============================================================
+   SET TEXT
+   ============================================================ */
+
+function setText(
+    id,
+    value
+)
+{
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    if (!element) {
+        return;
+    }
+
+
+    element.textContent =
+        value === undefined ||
+        value === null ||
+        value === ""
+            ? "-"
+            : value;
+
+}
+
+
+/* ============================================================
+   ESCAPE HTML UTILITY
+   ============================================================ */
+
+function escapeHtml(text)
+{
+    if (text === undefined || text === null) return "";
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* ============================================================
+   RENDER ADD-ON STATUS
+   ============================================================ */
+
+function renderAddonStatus(elementId, value)
+{
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    if (!value || value === "-" || value === "" || value === null || value === undefined) {
+        element.innerHTML = '<span class="addon-badge badge-none">-</span>';
+        return;
+    }
+
+    const strVal = String(value).trim();
+    const upper = strVal.toUpperCase();
+
+    if (upper === "YES" || upper === "Y" || upper === "TRUE" || upper === "YA") {
+        element.innerHTML = '<span class="addon-badge badge-yes">✓ YES</span>';
+    } else if (upper === "NO" || upper === "N" || upper === "FALSE" || upper === "TIDAK") {
+        element.innerHTML = '<span class="addon-badge badge-no">✕ NO</span>';
+    } else if (/^\d+$/.test(strVal)) {
+        element.innerHTML = `<span class="addon-badge badge-yes">✓ YES (${escapeHtml(strVal)})</span>`;
+    } else {
+        element.innerHTML = `<span class="addon-badge badge-custom">${escapeHtml(strVal)}</span>`;
+    }
+}
+
+
+/* ============================================================
+   SHOW ERROR
+   ============================================================ */
+
+function showError(message)
+{
+
+    const errorBox =
+        document.getElementById(
+            "errorBox"
+        );
+
+
+    errorBox.textContent =
+        message;
+
+
+    errorBox.style.display =
+        "block";
+
+}
+
+
+/* ============================================================
+   HIDE ERROR
+   ============================================================ */
+
+function hideError()
+{
+
+    document.getElementById(
+        "errorBox"
+    ).style.display =
+        "none";
+
+}
+
+
+/* ============================================================
+   RESET DASHBOARD
+   ============================================================ */
+
+function resetDashboard()
+{
+
+    document.getElementById(
+        "dashboard"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "excelFile"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "fileName"
+    ).textContent =
+        "No file selected";
+
+
+    document.getElementById(
+        "templateBadge"
+    ).textContent =
+        "";
+
+
+    setText("inverterQty", "-");
+    renderAddonStatus("addonBusbar", "-");
+    renderAddonStatus("addonOptimizer", "-");
+    renderAddonStatus("addonBallast", "-");
+    renderAddonStatus("addonRsd", "-");
+    renderAddonStatus("addonBatteryStand", "-");
+
+
+    hideError();
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+
+/* ============================================================
+   TNB BILL PDF ADDRESS EXTRACTOR
+   ============================================================ */
+
+const tnbPdfInput =
+    document.getElementById("tnbPdfFile");
+
+const tnbPdfUploadBox =
+    document.getElementById("tnbPdfUploadBox");
+
+
+if (typeof pdfjsLib !== "undefined") {
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+}
+
+
+/* ------------------------------------------------------------
+   TNB PDF FILE PICKER
+   ------------------------------------------------------------ */
+
+tnbPdfInput.addEventListener(
+    "change",
+    function(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        processTnbPdf(file);
+
+    }
+);
+
+
+/* ------------------------------------------------------------
+   DRAG OVER
+   ------------------------------------------------------------ */
+
+tnbPdfUploadBox.addEventListener(
+    "dragover",
+    function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        tnbPdfUploadBox.classList.add("drag-over");
+
+    }
+);
+
+
+/* ------------------------------------------------------------
+   DRAG ENTER
+   ------------------------------------------------------------ */
+
+tnbPdfUploadBox.addEventListener(
+    "dragenter",
+    function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        tnbPdfUploadBox.classList.add("drag-over");
+
+    }
+);
+
+
+/* ------------------------------------------------------------
+   DRAG LEAVE
+   ------------------------------------------------------------ */
+
+tnbPdfUploadBox.addEventListener(
+    "dragleave",
+    function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        tnbPdfUploadBox.classList.remove("drag-over");
+
+    }
+);
+
+
+/* ------------------------------------------------------------
+   DROP PDF
+   ------------------------------------------------------------ */
+
+tnbPdfUploadBox.addEventListener(
+    "drop",
+    function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        tnbPdfUploadBox.classList.remove("drag-over");
+
+        const files =
+            event.dataTransfer.files;
+
+        if (
+            !files ||
+            files.length === 0
+        ) {
+            return;
+        }
+
+        const file =
+            files[0];
+
+        if (
+            !/\.pdf$/i.test(file.name) &&
+            file.type !== "application/pdf"
+        ) {
+
+            showTnbPdfStatus(
+                "Please upload a PDF file.",
+                "pdf-error"
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const dataTransfer =
+                new DataTransfer();
+
+            dataTransfer.items.add(file);
+
+            tnbPdfInput.files =
+                dataTransfer.files;
+
+        }
+
+        catch(error) {
+
+            console.warn(
+                "Could not assign dropped PDF:",
+                error
+            );
+
+        }
+
+        processTnbPdf(file);
+
+    }
+);
+
+
+/* ------------------------------------------------------------
+   PROCESS TNB PDF
+   ------------------------------------------------------------ */
+
+async function processTnbPdf(file)
+{
+    document.getElementById("tnbPdfFileName").textContent = file.name;
+    document.getElementById("tnbPdfResult").style.display = "none";
+
+    showTnbPdfStatus("Reading TNB bill PDF...", "");
+
+    try {
+        if (typeof pdfjsLib === "undefined") {
+            throw new Error(
+                "PDF reader library could not be loaded. Please check your internet connection."
+            );
+        }
+
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+        if (!pdf.numPages) {
+            throw new Error("The uploaded file does not contain any PDF pages.");
+        }
+
+        const pageOrder = [];
+        if (pdf.numPages >= 2) pageOrder.push(2);
+        for (let p = 1; p <= pdf.numPages; p++) {
+            if (!pageOrder.includes(p)) pageOrder.push(p);
+        }
+
+        let address = "";
+        let foundPage = 0;
+        let detectedLineCount = 0;
+        let lastPageText = "";
+
+        for (const pageNumber of pageOrder) {
+            showTnbPdfStatus(
+                "Reading page " + pageNumber + " and looking for ALAMAT PREMIS...",
+                ""
+            );
+
+            const page = await pdf.getPage(pageNumber);
+            const textContent = await page.getTextContent({
+                normalizeWhitespace: false,
+                disableCombineTextItems: false
+            });
+
+            const items = buildPdfTextItems(textContent.items);
+            const lines = buildPdfLines(items);
+
+            detectedLineCount = lines.length;
+            lastPageText = lines.map(line => line.text).join(" ");
+
+            console.log("TNB PDF page " + pageNumber + " raw text items:", items);
+            console.log("TNB PDF page " + pageNumber + " visual lines:", lines);
+
+            address = extractAddressBelowAlamatPremis(items, lines);
+
+            if (address) {
+                foundPage = pageNumber;
+                break;
+            }
+        }
+
+        if (!address) {
+            const hint = lastPageText
+                ? " ALAMAT PREMIS was not detected in the PDF text layer. The bill may use a scanned/image layer or the text may be encoded differently."
+                : " No selectable text was detected in the PDF.";
+
+            throw new Error(
+                "Could not find the ALAMAT PREMIS address." + hint
+            );
+        }
+
+        document.getElementById("tnbAddressText").value = address;
+
+        document.getElementById("tnbPdfPageNote").textContent =
+            "Page " + foundPage + " • " + detectedLineCount +
+            " visual text lines detected • Address can be copied or edited.";
+
+        document.getElementById("tnbPdfResult").style.display = "block";
+
+        showTnbPdfStatus(
+            "Address extracted successfully.",
+            "pdf-success"
+        );
+
+        document.getElementById("tnbPdfResult").scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    }
+    catch(error) {
+        console.error("TNB PDF reading error:", error);
+        showTnbPdfStatus(
+            "Cannot read TNB Bill PDF: " + error.message,
+            "pdf-error"
+        );
+    }
+}
+
+
+/* ============================================================
+   PDF TEXT ITEM NORMALIZATION
+   ============================================================ */
+
+function buildPdfTextItems(items)
+{
+    return (items || [])
+        .filter(item =>
+            item &&
+            typeof item.str === "string" &&
+            item.str.trim() !== ""
+        )
+        .map(item => {
+            const transform = item.transform || [];
+
+            return {
+                text: item.str.trim(),
+                x: Number(transform[4] || 0),
+                y: Number(transform[5] || 0),
+                width: Number(item.width || 0),
+                height: Math.abs(Number(transform[3] || item.height || 0)) || 1
+            };
+        });
+}
+
+
+/* ============================================================
+   BUILD VISUAL LINES
+   ============================================================ */
+
+function buildPdfLines(items)
+{
+    const sorted = [...(items || [])].sort((a, b) => {
+        if (Math.abs(a.y - b.y) > 4) return b.y - a.y;
+        return a.x - b.x;
+    });
+
+    const groups = [];
+
+    for (const item of sorted) {
+        const tolerance = Math.max(4, Math.min(8, item.height * 0.65));
+
+        let group = null;
+        let bestDistance = Infinity;
+
+        for (const candidate of groups) {
+            const distance = Math.abs(candidate.y - item.y);
+            if (distance <= tolerance && distance < bestDistance) {
+                group = candidate;
+                bestDistance = distance;
+            }
+        }
+
+        if (!group) {
+            group = { y: item.y, items: [] };
+            groups.push(group);
+        }
+
+        group.items.push(item);
+        group.y = group.items.reduce((sum, x) => sum + x.y, 0) / group.items.length;
+    }
+
+    groups.sort((a, b) => b.y - a.y);
+
+    return groups
+        .map(group => {
+            const rowItems = [...group.items].sort((a, b) => a.x - b.x);
+
+            return {
+                text: rowItems.map(item => item.text).join(" ").replace(/\s+/g, " ").trim(),
+                x: Math.min(...rowItems.map(item => item.x)),
+                x2: Math.max(...rowItems.map(item => item.x + item.width)),
+                y: group.y,
+                items: rowItems
+            };
+        })
+        .filter(line => line.text);
+}
+
+
+/* ============================================================
+   ADDRESS EXTRACTION (PDF)
+   ============================================================ */
+
+function extractAddressBelowAlamatPremis(items, lines)
+{
+    if ((!items || !items.length) && (!lines || !lines.length)) {
+        return "";
+    }
+
+    const normalize = value =>
+        String(value || "")
+            .toUpperCase()
+            .replace(/[\u0000-\u001F]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    const clean = value =>
+        String(value || "")
+            .replace(/[\u0000-\u001F]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    const allItems = [...(items || [])];
+    const visualLines = [...(lines || [])];
+
+    let headingLine = null;
+    let headingX = null;
+    let headingY = null;
+
+    for (const line of visualLines) {
+        if (normalize(line.text).includes("ALAMAT PREMIS")) {
+            headingLine = line;
+            headingX = line.x;
+            headingY = line.y;
+            break;
+        }
+    }
+
+    if (!headingLine) {
+        const sorted = [...allItems].sort((a, b) => {
+            if (Math.abs(a.y - b.y) > 6) return b.y - a.y;
+            return a.x - b.x;
+        });
+
+        for (let i = 0; i < sorted.length; i++) {
+            const first = normalize(sorted[i].text);
+
+            if (first === "ALAMAT") {
+                for (let j = i + 1; j < sorted.length; j++) {
+                    const second = normalize(sorted[j].text);
+                    const sameRow = Math.abs(sorted[j].y - sorted[i].y) <= 8;
+                    const reasonableGap = sorted[j].x >= sorted[i].x;
+
+                    if (sameRow && reasonableGap && second === "PREMIS") {
+                        headingX = Math.min(sorted[i].x, sorted[j].x);
+                        headingY = (sorted[i].y + sorted[j].y) / 2;
+                        headingLine = {
+                            text: "ALAMAT PREMIS",
+                            x: headingX,
+                            x2: Math.max(
+                                sorted[i].x + sorted[i].width,
+                                sorted[j].x + sorted[j].width
+                            ),
+                            y: headingY,
+                            items: [sorted[i], sorted[j]]
+                        };
+                        break;
+                    }
+
+                    if (sorted[j].y < sorted[i].y - 8) break;
+                }
+            }
+
+            if (headingLine) break;
+        }
+    }
+
+    if (!headingLine || headingX === null || headingY === null) {
+        return "";
+    }
+
+    const addressLeft = headingX - 35;
+
+    let rightColumnStart = Infinity;
+
+    for (const line of visualLines) {
+        if (line.y > headingY + 8) continue;
+        if (line.x > headingX + 120) {
+            rightColumnStart = Math.min(rightColumnStart, line.x);
+        }
+    }
+
+    const addressRight = Number.isFinite(rightColumnStart)
+        ? Math.max(headingX + 180, rightColumnStart - 20)
+        : headingX + 320;
+
+    const stopPatterns = [
+        /^PECAHAN\s+PENGIRAAN/i,
+        /^PECAHAN/i,
+        /^NO\.?\s*SEQUENCE/i,
+        /^NO\.?\s*AKAUN/i,
+        /^MAKLUMAT\s+BAYARAN/i,
+        /^TEMPOH\s+BIL/i,
+        /^AMAUN\s*:/i,
+        /^TARIKH\s*:/i,
+        /^BIL\s*:/i,
+        /^JUMLAH\s+/i,
+        /^MAKLUMAT\s+AKAUN/i,
+        /^BUTIRAN\s+AKAUN/i,
+        /^KLIK\s+DISINI/i,
+        /^KLIK\s+DI\s+SINI/i,
+        /^IMBAS/i,
+        /^SCAN/i,
+        /^WWW\./i,
+        /^HTTP/i
+    ];
+
+    const garbagePatterns = [
+        /^KLIK\s+DISINI/i,
+        /^KLIK\s+DI\s+SINI/i,
+        /^IMBAS(?:\s+ATAU)?/i,
+        /^SCAN(?:\s+ATAU)?/i,
+        /^UNTUK$/i,
+        /^IBS$/i,
+        /^QR$/i,
+        /^WWW\./i,
+        /^HTTP/i
+    ];
+
+    const candidates = [];
+
+    for (const line of visualLines) {
+        if (line.y >= headingY - 5) continue;
+
+        const rowItems = line.items || [];
+
+        const leftItems = rowItems.filter(item => {
+            const center = item.x + (item.width || 0) / 2;
+            return item.x >= addressLeft && center <= addressRight;
+        });
+
+        if (!leftItems.length) continue;
+
+        leftItems.sort((a, b) => a.x - b.x);
+
+        const text = clean(leftItems.map(item => item.text).join(" "));
+        if (!text) continue;
+
+        const normalized = normalize(text);
+
+        if (stopPatterns.some(pattern => pattern.test(text))) {
+            break;
+        }
+
+        if (garbagePatterns.some(pattern => pattern.test(text))) {
+            continue;
+        }
+
+        if (/^ALAMAT\s+PREMIS/i.test(normalized)) continue;
+
+        candidates.push({
+            text,
+            y: line.y,
+            x: line.x
+        });
+
+        if (candidates.length >= 8) break;
+    }
+
+    if (!candidates.length) {
+        return "";
+    }
+
+    const finalParts = [];
+
+    for (const candidate of candidates) {
+        let text = clean(candidate.text);
+
+        text = text
+            .replace(/\bKLIK\s+DISINI\b.*$/i, "")
+            .replace(/\bKLIK\s+DI\s+SINI\b.*$/i, "")
+            .replace(/\bIMBAS\b.*$/i, "")
+            .replace(/\bSCAN\b.*$/i, "")
+            .trim();
+
+        if (!text) continue;
+
+        if (garbagePatterns.some(pattern => pattern.test(text))) continue;
+
+        if (
+            finalParts.length === 0 ||
+            normalize(finalParts[finalParts.length - 1]) !== normalize(text)
+        ) {
+            finalParts.push(text);
+        }
+    }
+
+    return finalParts.join(" ").replace(/\s+/g, " ").trim();
+}
+
+
+/* ------------------------------------------------------------
+   SHOW PDF STATUS
+   ------------------------------------------------------------ */
+
+function showTnbPdfStatus(
+    message,
+    className
+)
+{
+
+    const status =
+        document.getElementById(
+            "tnbPdfStatus"
+        );
+
+
+    status.textContent =
+        message;
+
+
+    status.className =
+        "pdf-status " +
+        (className || "");
+
+
+    status.style.display =
+        "block";
+
+}
+
+
+/* ------------------------------------------------------------
+   COPY ADDRESS
+   ------------------------------------------------------------ */
+
+async function copyTnbAddress()
+{
+
+    const address =
+        document.getElementById(
+            "tnbAddressText"
+        ).value.trim();
+
+
+    if (
+        !address
+    ) {
+
+        showTnbPdfStatus(
+            "There is no address to copy.",
+            "pdf-warning"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            address
+        );
+
+
+        showTnbPdfStatus(
+            "Address copied to clipboard.",
+            "pdf-success"
+        );
+
+    }
+
+    catch(error) {
+
+        const textarea =
+            document.getElementById(
+                "tnbAddressText"
+            );
+
+        textarea.removeAttribute("readonly");
+        textarea.select();
+
+        document.execCommand("copy");
+
+        textarea.setAttribute(
+            "readonly",
+            "readonly"
+        );
+
+
+        showTnbPdfStatus(
+            "Address copied to clipboard.",
+            "pdf-success"
+        );
+
+    }
+
+}
+
+
+/* ------------------------------------------------------------
+   CLEAR TNB PDF
+   ------------------------------------------------------------ */
+
+function clearTnbPdf()
+{
+
+    document.getElementById(
+        "tnbPdfFile"
+    ).value =
+        "";
+
+    document.getElementById(
+        "tnbPdfFileName"
+    ).textContent =
+        "No file selected";
+
+    document.getElementById(
+        "tnbAddressText"
+    ).value =
+        "";
+
+    document.getElementById(
+        "tnbPdfResult"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "tnbPdfStatus"
+    ).style.display =
+        "none";
+
+    tnbPdfUploadBox.classList.remove(
+        "drag-over"
+    );
+
+}
+
+
+/* ============================================================
+   CALCULATOR
+   ============================================================ */
+
+let calculatorExpression = "";
+
+let calculatorJustCalculated = false;
+
+
+function calculatorInput(value)
+{
+
+    const display =
+        document.getElementById(
+            "calcDisplay"
+        );
+
+
+    if (
+        calculatorJustCalculated &&
+        /[0-9.]/.test(value)
+    ) {
+
+        calculatorExpression = "";
+
+    }
+
+
+    calculatorJustCalculated = false;
+
+
+    calculatorExpression += value;
+
+
+    display.textContent =
+        calculatorExpression ||
+        "0";
+
+}
+
+
+function calculatorClear()
+{
+
+    calculatorExpression = "";
+
+    calculatorJustCalculated = false;
+
+    document.getElementById(
+        "calcDisplay"
+    ).textContent =
+        "0";
+
+}
+
+
+function calculatorDelete()
+{
+
+    calculatorExpression =
+        calculatorExpression.slice(
+            0,
+            -1
+        );
+
+
+    document.getElementById(
+        "calcDisplay"
+    ).textContent =
+        calculatorExpression ||
+        "0";
+
+}
+
+
+function calculatorCalculate()
+{
+
+    if (
+        !calculatorExpression
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        let expression =
+            calculatorExpression
+                .replace(
+                    /%/g,
+                    "/100"
+                );
+
+
+        if (
+            !/^[0-9+\-*/().\s]+$/.test(
+                expression
+            )
+        ) {
+
+            throw new Error(
+                "Invalid expression"
+            );
+
+        }
+
+
+        const result =
+            Function(
+                '"use strict"; return (' +
+                expression +
+                ')'
+            )();
+
+
+        if (
+            !Number.isFinite(result)
+        ) {
+
+            throw new Error(
+                "Invalid result"
+            );
+
+        }
+
+
+        const formattedResult =
+            Number(
+                result.toFixed(10)
+            );
+
+
+        addCalculationHistory(
+            calculatorExpression,
+            formattedResult
+        );
+
+
+        calculatorExpression =
+            String(
+                formattedResult
+            );
+
+
+        document.getElementById(
+            "calcDisplay"
+        ).textContent =
+            formattedResult;
+
+
+        calculatorJustCalculated =
+            true;
+
+    }
+
+    catch(error) {
+
+        document.getElementById(
+            "calcDisplay"
+        ).textContent =
+            "Error";
+
+        calculatorExpression = "";
+
+        calculatorJustCalculated =
+            true;
+
+    }
+
+}
+
+
+function addCalculationHistory(
+    expression,
+    result
+)
+{
+
+    const historyList =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    const existing =
+        historyList.querySelector(
+            ".history-item"
+        );
+
+
+    if (
+        existing &&
+        existing.textContent ===
+        "No calculations yet"
+    ) {
+
+        historyList.innerHTML =
+            "";
+
+    }
+
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "history-item";
+
+
+    item.textContent =
+        expression +
+        " = " +
+        result;
+
+
+    historyList.prepend(
+        item
+    );
+
+
+    while (
+        historyList.children.length >
+        8
+    ) {
+
+        historyList.removeChild(
+            historyList.lastChild
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   KEYBOARD CALCULATOR SUPPORT
+   ============================================================ */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        const activeTab =
+            document.querySelector(
+                ".tab-content.active"
+            );
+
+
+        if (
+            !activeTab ||
+            activeTab.id !==
+            "calculatorTab"
+        ) {
+
+            return;
+
+        }
+
+
+        const key =
+            event.key;
+
+
+        if (
+            /^[0-9.+\-*/()%]$/.test(
+                key
+            )
+        ) {
+
+            calculatorInput(
+                key
+            );
+
+            event.preventDefault();
+
+        }
+
+
+        else if (
+            key === "Enter" ||
+            key === "="
+        ) {
+
+            calculatorCalculate();
+
+            event.preventDefault();
+
+        }
+
+
+        else if (
+            key === "Backspace"
+        ) {
+
+            calculatorDelete();
+
+            event.preventDefault();
+
+        }
+
+
+        else if (
+            key === "Escape"
+        ) {
+
+            calculatorClear();
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   UNIT CONVERTER
+   ============================================================ */
+
+const unitToMM = {
+
+    mm: 1,
+
+    cm: 10,
+
+    m: 1000,
+
+    inch: 25.4,
+
+    ft: 304.8,
+
+    yd: 914.4
+
+};
+
+
+const unitNames = {
+
+    mm: "mm",
+
+    cm: "cm",
+
+    m: "m",
+
+    inch: "in",
+
+    ft: "ft",
+
+    yd: "yd"
+
+};
+
+
+function convertUnit()
+{
+
+    const value =
+        parseFloat(
+            document.getElementById(
+                "convertValue"
+            ).value
+        );
+
+
+    const fromUnit =
+        document.getElementById(
+            "fromUnit"
+        );
+
+
+    const toUnit =
+        document.getElementById(
+            "toUnit"
+        );
+
+
+    const resultElement =
+        document.getElementById(
+            "convertResult"
+        );
+
+
+    const equationElement =
+        document.getElementById(
+            "convertEquation"
+        );
+
+
+    if (
+        isNaN(value)
+    ) {
+
+        resultElement.textContent =
+            "-";
+
+        equationElement.textContent =
+            "Enter a value to convert.";
+
+        return;
+
+    }
+
+
+    const valueInMM =
+        value *
+        unitToMM[fromUnit.value];
+
+
+    const result =
+        valueInMM /
+        unitToMM[toUnit.value];
+
+
+    const roundedResult =
+        formatConversionNumber(
+            result
+        );
+
+
+    resultElement.textContent =
+        roundedResult +
+        " " +
+        unitNames[toUnit.value];
+
+
+    equationElement.textContent =
+        formatConversionNumber(value) +
+        " " +
+        unitNames[fromUnit.value] +
+        " = " +
+        roundedResult +
+        " " +
+        unitNames[toUnit.value];
+
+}
+
+
+function formatConversionNumber(
+    number
+)
+{
+
+    if (
+        !Number.isFinite(number)
+    ) {
+
+        return "-";
+
+    }
+
+
+    if (
+        number === 0
+    ) {
+
+        return "0";
+
+    }
+
+
+    const absolute =
+        Math.abs(number);
+
+
+    let maximumDigits = 8;
+
+
+    if (
+        absolute >= 1000000
+    ) {
+
+        maximumDigits = 4;
+
+    }
+
+    else if (
+        absolute >= 1000
+    ) {
+
+        maximumDigits = 6;
+
+    }
+
+
+    return Number(
+        number.toFixed(
+            maximumDigits
+        )
+    ).toLocaleString(
+        undefined,
+        {
+            maximumFractionDigits:
+                maximumDigits
+        }
+    );
+
+}
+
+
+/* ============================================================
+   SWAP UNITS
+   ============================================================ */
+
+function swapUnits()
+{
+
+    const from =
+        document.getElementById(
+            "fromUnit"
+        );
+
+
+    const to =
+        document.getElementById(
+            "toUnit"
+        );
+
+
+    const temporary =
+        from.value;
+
+
+    from.value =
+        to.value;
+
+
+    to.value =
+        temporary;
+
+
+    convertUnit();
+
+}
+
+
+/* ============================================================
+   CLEAR CONVERTER
+   ============================================================ */
+
+function clearConverter()
+{
+
+    document.getElementById(
+        "convertValue"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "convertResult"
+    ).textContent =
+        "-";
+
+
+    document.getElementById(
+        "convertEquation"
+    ).textContent =
+        "Enter a value to convert.";
+
+}
+
+
+/* ============================================================
+   INITIAL CONVERSION
+   ============================================================ */
+
+convertUnit();
+
+</script>
+
+</body>
+
+</html>
