@@ -4196,7 +4196,8 @@ function extractProjectData(
 
     /* --------------------------------------------------------
        ADD-ON ITEMS EXTRACTION (SECTION 6: OFFICE USE):
-       Busbar Combiner Box, Optimizer, Ballast, RSD, Battery Stand
+       Dynamically finds each add-on by label across the entire sheet
+       so templates with or without Ballast are fully supported.
        -------------------------------------------------------- */
     let addonBusbar = findAddonValue(sheet, "busbar");
     if (addonBusbar === "-") {
@@ -4214,9 +4215,6 @@ function extractProjectData(
                     "COMBINER BOX"
                 ]
             );
-    }
-    if (addonBusbar === "-") {
-        addonBusbar = readCell(sheet, "C90");
     }
 
     let addonOptimizer = findAddonValue(sheet, "optimizer");
@@ -4236,9 +4234,6 @@ function extractProjectData(
                 ]
             );
     }
-    if (addonOptimizer === "-") {
-        addonOptimizer = readCell(sheet, "C91");
-    }
 
     let addonBallast = findAddonValue(sheet, "ballast");
     if (addonBallast === "-") {
@@ -4255,9 +4250,6 @@ function extractProjectData(
                     "BALLAST MOUNTING"
                 ]
             );
-    }
-    if (addonBallast === "-") {
-        addonBallast = readCell(sheet, "C92");
     }
 
     let addonRsd = findAddonValue(sheet, "rsd");
@@ -4276,9 +4268,6 @@ function extractProjectData(
                 ]
             );
     }
-    if (addonRsd === "-") {
-        addonRsd = readCell(sheet, "C93");
-    }
 
     let addonBatteryStand = findAddonValue(sheet, "batteryStand");
     if (addonBatteryStand === "-") {
@@ -4295,9 +4284,6 @@ function extractProjectData(
                     "STAND BATTERY"
                 ]
             );
-    }
-    if (addonBatteryStand === "-") {
-        addonBatteryStand = readCell(sheet, "C94");
     }
 
 
