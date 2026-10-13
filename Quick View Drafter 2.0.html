@@ -730,52 +730,231 @@ body {
 
 }
 
+.map-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
 .map-btn {
-
     display: inline-flex;
-
     align-items: center;
-
-    gap: 6px;
-
+    gap: 8px;
     padding: 10px 16px;
-
     border-radius: 10px;
-
     background: #172033;
-
     color: white;
-
     border: none;
-
     cursor: pointer;
-
     font-size: 13px;
-
     font-weight: 650;
-
     white-space: nowrap;
-
-    transition: .2s ease;
-
-    box-shadow:
-        0 4px 10px
-        rgba(23,32,51,.15);
-
+    transition: all .2s ease;
+    box-shadow: 0 4px 10px rgba(23,32,51,.15);
 }
 
 .map-btn:hover {
-
     background: #2b3850;
-
     transform: translateY(-1px);
-
+    box-shadow: 0 6px 14px rgba(23,32,51,.22);
 }
 
 .map-btn:active {
+    transform: scale(.98);
+}
 
-    transform: scale(.97);
+.dropdown-caret {
+    font-size: 11px;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
 
+.map-dropdown-wrapper.active .dropdown-caret {
+    transform: rotate(180deg);
+}
+
+.map-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 270px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16), 0 4px 10px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.97);
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s;
+    z-index: 1000;
+}
+
+.map-dropdown-wrapper.active .map-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+
+.map-dropdown-header {
+    font-size: 10px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #64748b;
+    padding: 6px 10px 8px;
+}
+
+.map-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.map-dropdown-item:hover {
+    background: #f1f5f9;
+}
+
+.map-dropdown-item:active {
+    transform: scale(0.99);
+}
+
+.dropdown-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.dropdown-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dropdown-title {
+    font-size: 13px;
+    font-weight: 650;
+    color: #0f172a;
+}
+
+.dropdown-desc {
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.3;
+}
+
+.map-dropdown-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 6px 0;
+}
+
+.map-item-both:hover {
+    background: #eef2ff;
+}
+
+.map-item-both .dropdown-title {
+    color: #2563eb;
+}
+
+.popup-blocked-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    max-width: 440px;
+    background: #1e293b;
+    color: #f8fafc;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 20px 35px -5px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    z-index: 99999;
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.popup-blocked-toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.popup-blocked-toast .toast-content {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.popup-blocked-toast .toast-icon {
+    font-size: 24px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.popup-blocked-toast .toast-body {
+    flex: 1;
+}
+
+.popup-blocked-toast .toast-body strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.popup-blocked-toast .toast-body p {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.45;
+    margin: 0 0 12px 0;
+}
+
+.popup-blocked-toast .toast-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.popup-blocked-toast .toast-open-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 650;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.popup-blocked-toast .toast-open-btn:hover {
+    background: #1d4ed8;
+}
+
+.popup-blocked-toast .toast-dismiss-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.popup-blocked-toast .toast-dismiss-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
 }
 
 /* =====================================================
@@ -1741,19 +1920,23 @@ body {
     }
 
     .address-container {
-
         flex-direction: column;
-
         align-items: flex-start;
+    }
 
+    .map-dropdown-wrapper {
+        width: 100%;
     }
 
     .map-btn {
-
         width: 100%;
-
         justify-content: center;
+    }
 
+    .map-dropdown-menu {
+        left: 0;
+        right: 0;
+        width: auto;
     }
 
 }
@@ -2095,15 +2278,46 @@ body {
         >
             -
         </div>
-        <button
-            type="button"
-            id="openMapBtn"
-            class="map-btn"
-            onclick="openInGoogleMaps()"
-            title="Open in Google Maps"
-        >
-            📍 Open Maps
-        </button>
+        <div class="map-dropdown-wrapper" id="mapDropdownWrapper">
+            <button
+                type="button"
+                id="openMapBtn"
+                class="map-btn"
+                onclick="toggleMapDropdown(event)"
+                title="Choose Google Maps, Google Earth, or Both"
+                aria-haspopup="true"
+                aria-expanded="false"
+            >
+                <span id="mapBtnIcon">📍</span>
+                <span id="mapBtnLabel">Open Maps</span>
+                <span class="dropdown-caret">▾</span>
+            </button>
+            <div class="map-dropdown-menu" id="mapDropdownMenu">
+                <div class="map-dropdown-header">Open Location In</div>
+                <button type="button" class="map-dropdown-item" onclick="openLocationSelection('maps', event)">
+                    <span class="dropdown-icon">🗺️</span>
+                    <div class="dropdown-details">
+                        <span class="dropdown-title">Google Maps</span>
+                        <span class="dropdown-desc">Road map, terrain & navigation</span>
+                    </div>
+                </button>
+                <button type="button" class="map-dropdown-item" onclick="openLocationSelection('earth', event)">
+                    <span class="dropdown-icon">🌍</span>
+                    <div class="dropdown-details">
+                        <span class="dropdown-title">Google Earth</span>
+                        <span class="dropdown-desc">3D satellite imagery & roof view</span>
+                    </div>
+                </button>
+                <div class="map-dropdown-divider"></div>
+                <button type="button" class="map-dropdown-item map-item-both" onclick="openLocationSelection('both', event)">
+                    <span class="dropdown-icon">🚀</span>
+                    <div class="dropdown-details">
+                        <span class="dropdown-title">Both (Maps & Earth)</span>
+                        <span class="dropdown-desc">Open both in separate browser tabs</span>
+                    </div>
+                </button>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -3784,40 +3998,12 @@ function extractProjectData(
 
 
     /* --------------------------------------------------------
-       ADDRESS EXTRACTION:
-       Combines 3 rows of Address (Premis) + Postcode + Town + State
+       ADDRESS EXTRACTION (ADDRESS (PREMIS)):
+       Logic:
+       - If postcode, town, state is empty -> take address (premis) only
+       - If postcode, town, state is not empty -> combine address (premis) with postcode, town and state
        -------------------------------------------------------- */
-    let address = "-";
-
-    const fixedAddressParts = [
-        readCell(sheet, "C11"),                                // Address line 1
-        readCell(sheet, "C12"),                                // Address line 2
-        readCell(sheet, "C13"),                                // Address line 3
-        readCell(sheet, "C14").replace(/,/g, "").trim(),       // Postcode (strip comma)
-        readCell(sheet, "C15"),                                // Town
-        readCell(sheet, "C16")                                 // State
-    ].filter(value => value !== "-" && value !== "");
-
-    if (fixedAddressParts.length >= 2) {
-        address = fixedAddressParts.join(", ");
-    } else {
-        const dynamicAddress = extractMultiLinePremisAddress(sheet);
-        if (dynamicAddress !== "-") {
-            address = dynamicAddress;
-        } else {
-            address = findValueByLabels(
-                sheet,
-                [
-                    "SITE LOCATION / GPS",
-                    "ADDRESS (PREMIS)",
-                    "ADDRESS",
-                    "SITE LOCATION",
-                    "PREMIS ADDRESS",
-                    "INSTALLATION ADDRESS"
-                ]
-            );
-        }
-    }
+    const address = extractPremisAddressWithComponents(sheet, templateType);
 
 
     let bdName =
@@ -4361,12 +4547,15 @@ function extractProjectData(
 
 
 /* ============================================================
-   EXTRACT MULTI-LINE PREMIS ADDRESS (DYNAMIC SEARCH)
+   EXTRACT PREMIS ADDRESS WITH COMPONENTS (DYNAMIC SEARCH)
+   Logic:
+   - If postcode, town, state is empty -> take address (premis) only
+   - If postcode, town, state is not empty -> combine address (premis) with postcode, town and state
    ============================================================ */
 
-function extractMultiLinePremisAddress(sheet)
+function findDynamicPremisLines(sheet)
 {
-    if (!sheet || !sheet["!ref"]) return "-";
+    if (!sheet || !sheet["!ref"]) return [];
 
     const range = XLSX.utils.decode_range(sheet["!ref"]);
 
@@ -4378,68 +4567,322 @@ function extractMultiLinePremisAddress(sheet)
 
             const text = normalizeLabel(getCellRawValue(cell));
 
-            if (text === "ADDRESS (PREMIS)" || text === "ADDRESS(PREMIS)") {
-                const parts = [];
+            if (
+                text === "ADDRESS (PREMIS)" ||
+                text === "ADDRESS(PREMIS)" ||
+                text === "PREMIS ADDRESS" ||
+                text === "ALAMAT (PREMIS)" ||
+                text === "ALAMAT PREMIS"
+            ) {
+                const lines = [];
 
                 for (let rOffset = 0; rOffset < 3; rOffset++) {
-                    const cAddr = XLSX.utils.encode_cell({ r: row + rOffset, c: col + 1 });
-                    const val = readCellObject(sheet[cAddr]);
-                    if (val !== "-" && val !== "") parts.push(val);
-                }
+                    const nextRow = row + rOffset;
+                    if (nextRow > range.e.r) break;
 
-                for (let rOffset = 3; rOffset < 6; rOffset++) {
-                    const cAddr = XLSX.utils.encode_cell({ r: row + rOffset, c: col + 1 });
-                    let val = readCellObject(sheet[cAddr]);
-                    if (val !== "-" && val !== "") {
-                        // Strip comma if it's the postcode (digits)
-                        if (/^\d{1,3}(,\d{3})+$/.test(val.trim())) {
-                            val = val.replace(/,/g, "").trim();
+                    // If checking rows below, ensure col doesn't have a new label (e.g. POSTCODE)
+                    if (rOffset > 0) {
+                        const labelAddr = XLSX.utils.encode_cell({ r: nextRow, c: col });
+                        const labelCell = sheet[labelAddr];
+                        if (labelCell) {
+                            const lbl = normalizeLabel(getCellRawValue(labelCell));
+                            if (lbl && lbl !== text) {
+                                break;
+                            }
                         }
-                        parts.push(val);
+                    }
+
+                    const valAddr = XLSX.utils.encode_cell({ r: nextRow, c: col + 1 });
+                    const val = readCellObject(sheet[valAddr]);
+                    if (val !== "-" && val !== "" && !isDisallowedLabelValue(val)) {
+                        if (typeof val === "string" && val.includes("\n")) {
+                            val.split(/[\r\n]+/).forEach(part => {
+                                const p = part.trim();
+                                if (p && p !== "-" && !isDisallowedLabelValue(p)) {
+                                    lines.push(p);
+                                }
+                            });
+                        } else {
+                            lines.push(val);
+                        }
                     }
                 }
 
-                if (parts.length > 0) {
-                    return parts.join(", ");
+                if (lines.length > 0) {
+                    return lines;
                 }
             }
         }
     }
 
+    return [];
+}
+
+function extractPremisAddressWithComponents(sheet, templateType)
+{
+    if (!sheet || !sheet["!ref"]) return "-";
+
+    // 1. Gather Address (Premis) lines
+    let premisLines = [];
+
+    // If standard layout, check C11, C12, C13 first
+    const c11 = readCell(sheet, "C11");
+    const c12 = readCell(sheet, "C12");
+    const c13 = readCell(sheet, "C13");
+
+    const fixedRaw = [c11, c12, c13];
+    const fixedLines = [];
+    for (const val of fixedRaw) {
+        if (val !== "-" && val !== "" && !isDisallowedLabelValue(val)) {
+            if (typeof val === "string" && val.includes("\n")) {
+                val.split(/[\r\n]+/).forEach(part => {
+                    const p = part.trim();
+                    if (p && p !== "-" && !isDisallowedLabelValue(p)) {
+                        fixedLines.push(p);
+                    }
+                });
+            } else {
+                fixedLines.push(val);
+            }
+        }
+    }
+
+    if (fixedLines.length > 0) {
+        premisLines = fixedLines;
+    } else {
+        premisLines = findDynamicPremisLines(sheet);
+    }
+
+    // 2. Gather Postcode, Town, State
+    let postcode = findValueByLabels(sheet, [
+        "POSTCODE",
+        "POST CODE",
+        "POSKOD",
+        "ZIP CODE",
+        "ZIP"
+    ]);
+    if (postcode === "-" || !postcode) {
+        postcode = readCell(sheet, "C14");
+    }
+    if (postcode && postcode !== "-") {
+        postcode = String(postcode).replace(/,/g, "").trim();
+        if (isDisallowedLabelValue(postcode)) {
+            postcode = "-";
+        }
+    }
+
+    let town = findValueByLabels(sheet, [
+        "TOWN",
+        "BANDAR",
+        "CITY",
+        "DAERAH"
+    ]);
+    if (town === "-" || !town) {
+        town = readCell(sheet, "C15");
+    }
+    if (town && (town === "-" || isDisallowedLabelValue(town))) {
+        town = "-";
+    }
+
+    let state = findValueByLabels(sheet, [
+        "STATE",
+        "NEGERI"
+    ]);
+    if (state === "-" || !state) {
+        state = readCell(sheet, "C16");
+    }
+    if (state && (state === "-" || isDisallowedLabelValue(state))) {
+        state = "-";
+    }
+
+    const hasPostcode = postcode && postcode !== "-" && postcode !== "";
+    const hasTown = town && town !== "-" && town !== "";
+    const hasState = state && state !== "-" && state !== "";
+
+    const isPostcodeTownStateEmpty = !hasPostcode && !hasTown && !hasState;
+
+    // RULE 1: If postcode, town, state is empty -> take address (premis) only
+    if (isPostcodeTownStateEmpty) {
+        if (premisLines.length > 0) {
+            return premisLines.join(", ");
+        }
+
+        return findValueByLabels(sheet, [
+            "SITE LOCATION / GPS",
+            "ADDRESS (PREMIS)",
+            "ADDRESS",
+            "SITE LOCATION",
+            "PREMIS ADDRESS",
+            "INSTALLATION ADDRESS"
+        ]);
+    }
+
+    // RULE 2: If postcode, town, state is not empty -> combine address (premis) with postcode, town and state
+    const extraParts = [];
+    if (hasPostcode) extraParts.push(postcode);
+    if (hasTown) extraParts.push(town);
+    if (hasState) extraParts.push(state);
+
+    let filteredPremis = [...premisLines];
+
+    // If premisLines has a line that already contains the postcode and town/state
+    // (e.g. Line 3 in Excel has "35900 Tanjong Malim Perak" AND postcode/town/state are also filled in sheet),
+    // omit that duplicate line so it doesn't get repeated twice when combining.
+    if (filteredPremis.length > 0) {
+        const lastLine = filteredPremis[filteredPremis.length - 1].toLowerCase();
+        const matchesPostcode = hasPostcode && lastLine.includes(postcode.toLowerCase());
+        const matchesTown = hasTown && lastLine.includes(town.toLowerCase());
+        const matchesState = hasState && lastLine.includes(state.toLowerCase());
+
+        if ((matchesPostcode && (matchesTown || matchesState)) || (matchesTown && matchesState)) {
+            filteredPremis.pop();
+        }
+    }
+
+    const combined = [...filteredPremis, ...extraParts].filter(
+        v => v !== "-" && v !== "" && !isDisallowedLabelValue(v)
+    );
+
+    if (combined.length > 0) {
+        return combined.join(", ");
+    }
+
     return "-";
+}
+
+function extractMultiLinePremisAddress(sheet)
+{
+    return extractPremisAddressWithComponents(sheet);
 }
 
 
 /* ============================================================
-   OPEN ADDRESS IN GOOGLE MAPS
+   OPEN LOCATION (GOOGLE MAPS / GOOGLE EARTH / BOTH)
    ============================================================ */
 
-function openInGoogleMaps()
+function toggleMapDropdown(event)
 {
-    const addressElement =
-        document.getElementById(
-            "address"
-        );
+    if (event) {
+        event.stopPropagation();
+    }
+    const wrapper = document.getElementById("mapDropdownWrapper");
+    if (!wrapper) return;
+    wrapper.classList.toggle("active");
+}
 
+function closeMapDropdown()
+{
+    const wrapper = document.getElementById("mapDropdownWrapper");
+    if (wrapper) {
+        wrapper.classList.remove("active");
+    }
+}
+
+document.addEventListener("click", function(event) {
+    const wrapper = document.getElementById("mapDropdownWrapper");
+    if (wrapper && !wrapper.contains(event.target)) {
+        closeMapDropdown();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeMapDropdown();
+    }
+});
+
+function openLocationSelection(type, event)
+{
+    if (event) {
+        event.stopPropagation();
+    }
+    closeMapDropdown();
+
+    const addressElement = document.getElementById("address");
     if (!addressElement) return;
 
-    const rawAddress =
-        addressElement.textContent.trim();
-
+    const rawAddress = addressElement.textContent.trim();
     if (!rawAddress || rawAddress === "-") {
         alert("Please upload an Excel file with an address first.");
         return;
     }
 
-    const mapsUrl =
-        "https://www.google.com/maps/search/?api=1&query=" +
-        encodeURIComponent(rawAddress);
+    const encoded = encodeURIComponent(rawAddress);
+    const mapsUrl = "https://www.google.com/maps/search/?api=1&query=" + encoded;
+    const earthUrl = "https://earth.google.com/web/search/" + encoded;
 
-    window.open(
-        mapsUrl,
-        "_blank",
-        "noopener,noreferrer"
-    );
+    const iconEl = document.getElementById("mapBtnIcon");
+    const labelEl = document.getElementById("mapBtnLabel");
+
+    if (type === "maps") {
+        if (iconEl && labelEl) {
+            iconEl.textContent = "🗺️";
+            labelEl.textContent = "Google Maps";
+        }
+        window.open(mapsUrl, "_blank", "noopener,noreferrer");
+    } else if (type === "earth") {
+        if (iconEl && labelEl) {
+            iconEl.textContent = "🌍";
+            labelEl.textContent = "Google Earth";
+        }
+        window.open(earthUrl, "_blank", "noopener,noreferrer");
+    } else if (type === "both") {
+        if (iconEl && labelEl) {
+            iconEl.textContent = "🚀";
+            labelEl.textContent = "Maps & Earth";
+        }
+        window.open(mapsUrl, "_blank", "noopener,noreferrer");
+        const win2 = window.open(earthUrl, "_blank", "noopener,noreferrer");
+
+        // If the browser popup blocker blocked the second tab
+        if (!win2 || win2.closed || typeof win2.closed === "undefined") {
+            showPopupBlockedBanner(earthUrl);
+        }
+    }
+}
+
+function showPopupBlockedBanner(earthUrl)
+{
+    let banner = document.getElementById("popupBlockedToast");
+    if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "popupBlockedToast";
+        banner.className = "popup-blocked-toast";
+        document.body.appendChild(banner);
+    }
+
+    const safeUrl = String(earthUrl).replace(/"/g, '&quot;');
+
+    banner.innerHTML = `
+        <div class="toast-content">
+            <div class="toast-icon">⚠️</div>
+            <div class="toast-body">
+                <strong>Google Earth tab was blocked by your browser</strong>
+                <p>Browsers block opening 2 tabs at the same time by default. Click below to open Google Earth, or allow pop-ups in your URL bar to open both automatically:</p>
+                <div class="toast-actions">
+                    <button type="button" class="toast-open-btn" onclick="window.open('${safeUrl}', '_blank', 'noopener,noreferrer'); document.getElementById('popupBlockedToast').classList.remove('show');">
+                        🌍 Open Google Earth Now
+                    </button>
+                    <button type="button" class="toast-dismiss-btn" onclick="document.getElementById('popupBlockedToast').classList.remove('show');">
+                        Dismiss
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    setTimeout(function() {
+        if (banner) banner.classList.add("show");
+    }, 50);
+
+    setTimeout(function() {
+        if (banner) banner.classList.remove("show");
+    }, 15000);
+}
+
+function openInGoogleMaps()
+{
+    openLocationSelection("maps");
 }
 
 
