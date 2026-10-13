@@ -4553,6 +4553,20 @@ function extractProjectData(
    - If postcode, town, state is not empty -> combine address (premis) with postcode, town and state
    ============================================================ */
 
+function isAddressComponentEmpty(value)
+{
+    if (value === undefined || value === null) return true;
+    const str = String(value).trim();
+    if (str === "" || str === "-" || str === "--" || str === "—") return true;
+    if (str === "0" || str === "0.0" || str === "0.00" || str === "#N/A" || str === "#VALUE!" || str === "#REF!") return true;
+    if (/^0+$/.test(str)) return true;
+    const lower = str.toLowerCase();
+    if (lower === "null" || lower === "undefined" || lower === "n/a" || lower === "na") return true;
+    if (lower === "none" || lower === "tiada" || lower === "nil") return true;
+    if (isDisallowedLabelValue(str)) return true;
+    return false;
+}
+
 function findDynamicPremisLines(sheet)
 {
     if (!sheet || !sheet["!ref"]) return [];
@@ -4594,11 +4608,11 @@ function findDynamicPremisLines(sheet)
 
                     const valAddr = XLSX.utils.encode_cell({ r: nextRow, c: col + 1 });
                     const val = readCellObject(sheet[valAddr]);
-                    if (val !== "-" && val !== "" && !isDisallowedLabelValue(val)) {
+                    if (!isAddressComponentEmpty(val)) {
                         if (typeof val === "string" && val.includes("\n")) {
                             val.split(/[\r\n]+/).forEach(part => {
                                 const p = part.trim();
-                                if (p && p !== "-" && !isDisallowedLabelValue(p)) {
+                                if (!isAddressComponentEmpty(p)) {
                                     lines.push(p);
                                 }
                             });
@@ -4633,11 +4647,11 @@ function extractPremisAddressWithComponents(sheet, templateType)
     const fixedRaw = [c11, c12, c13];
     const fixedLines = [];
     for (const val of fixedRaw) {
-        if (val !== "-" && val !== "" && !isDisallowedLabelValue(val)) {
+        if (!isAddressComponentEmpty(val)) {
             if (typeof val === "string" && val.includes("\n")) {
                 val.split(/[\r\n]+/).forEach(part => {
                     const p = part.trim();
-                    if (p && p !== "-" && !isDisallowedLabelValue(p)) {
+                    if (!isAddressComponentEmpty(p)) {
                         fixedLines.push(p);
                     }
                 });
@@ -4661,12 +4675,12 @@ function extractPremisAddressWithComponents(sheet, templateType)
         "ZIP CODE",
         "ZIP"
     ]);
-    if (postcode === "-" || !postcode) {
+    if (isAddressComponentEmpty(postcode)) {
         postcode = readCell(sheet, "C14");
     }
-    if (postcode && postcode !== "-") {
+    if (postcode && !isAddressComponentEmpty(postcode)) {
         postcode = String(postcode).replace(/,/g, "").trim();
-        if (isDisallowedLabelValue(postcode)) {
+        if (isAddressComponentEmpty(postcode)) {
             postcode = "-";
         }
     }
@@ -4677,10 +4691,10 @@ function extractPremisAddressWithComponents(sheet, templateType)
         "CITY",
         "DAERAH"
     ]);
-    if (town === "-" || !town) {
+    if (isAddressComponentEmpty(town)) {
         town = readCell(sheet, "C15");
     }
-    if (town && (town === "-" || isDisallowedLabelValue(town))) {
+    if (town && isAddressComponentEmpty(town)) {
         town = "-";
     }
 
@@ -4688,20 +4702,20 @@ function extractPremisAddressWithComponents(sheet, templateType)
         "STATE",
         "NEGERI"
     ]);
-    if (state === "-" || !state) {
+    if (isAddressComponentEmpty(state)) {
         state = readCell(sheet, "C16");
     }
-    if (state && (state === "-" || isDisallowedLabelValue(state))) {
+    if (state && isAddressComponentEmpty(state)) {
         state = "-";
     }
 
-    const hasPostcode = postcode && postcode !== "-" && postcode !== "";
-    const hasTown = town && town !== "-" && town !== "";
-    const hasState = state && state !== "-" && state !== "";
+    const hasPostcode = !isAddressComponentEmpty(postcode);
+    const hasTown = !isAddressComponentEmpty(town);
+    const hasState = !isAddressComponentEmpty(state);
 
     const isPostcodeTownStateEmpty = !hasPostcode && !hasTown && !hasState;
 
-    // RULE 1: If postcode, town, state is empty -> take address (premis) only
+    // RULE 1: If postcode, town, state is empty (including formula zeros/blanks) -> take all lines from address (premis) only
     if (isPostcodeTownStateEmpty) {
         if (premisLines.length > 0) {
             return premisLines.join(", ");
@@ -4730,9 +4744,9 @@ function extractPremisAddressWithComponents(sheet, templateType)
     // omit that duplicate line so it doesn't get repeated twice when combining.
     if (filteredPremis.length > 0) {
         const lastLine = filteredPremis[filteredPremis.length - 1].toLowerCase();
-        const matchesPostcode = hasPostcode && lastLine.includes(postcode.toLowerCase());
-        const matchesTown = hasTown && lastLine.includes(town.toLowerCase());
-        const matchesState = hasState && lastLine.includes(state.toLowerCase());
+        const matchesPostcode = hasPostcode && String(postcode).length >= 4 && lastLine.includes(String(postcode).toLowerCase());
+        const matchesTown = hasTown && String(town).length >= 2 && lastLine.includes(String(town).toLowerCase());
+        const matchesState = hasState && String(state).length >= 2 && lastLine.includes(String(state).toLowerCase());
 
         if ((matchesPostcode && (matchesTown || matchesState)) || (matchesTown && matchesState)) {
             filteredPremis.pop();
@@ -4740,7 +4754,7 @@ function extractPremisAddressWithComponents(sheet, templateType)
     }
 
     const combined = [...filteredPremis, ...extraParts].filter(
-        v => v !== "-" && v !== "" && !isDisallowedLabelValue(v)
+        v => !isAddressComponentEmpty(v)
     );
 
     if (combined.length > 0) {
