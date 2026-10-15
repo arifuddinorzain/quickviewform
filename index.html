@@ -4338,45 +4338,93 @@ function extractProjectData(
 
     /* --------------------------------------------------------
        BATTERY STORAGE EXTRACTION:
-       Checks explicitly if Battery Storage is "NO" or empty.
+       Extracts battery brand, model/capacity, and quantity.
+       Checks both dynamic label locations across the sheet (to support
+       shifted rows) and direct template cells (C55, C56, C58).
+       A "NO" in row 34 (TNB application section) is not allowed
+       to block actual battery equipment filled in Section 3/6.
        -------------------------------------------------------- */
-    let hasBatteryStorage = true;
-
-    const batteryStorageFlag = findValueNextToAnyLabel(sheet, ["BATTERY STORAGE", "BATTERY STORAGE SYSTEM"]);
-    if (batteryStorageFlag !== "-" && /^NO\b/i.test(batteryStorageFlag.trim())) {
-        hasBatteryStorage = false;
-    }
-
     let batteryBrand = "-";
     let batteryModel = "-";
     let batteryQuantity = "-";
 
-    if (hasBatteryStorage) {
+    // 1. Battery Quantity: Search by label dynamically across sheet, then fallback to C58
+    batteryQuantity = findValueByLabels(sheet, [
+        "BATTERY QUANTITY",
+        "BATTERY QTY",
+        "BATTERY QTY.",
+        "NUMBER OF BATTERY",
+        "NO. OF BATTERY",
+        "NO OF BATTERY",
+        "BATTERY (QTY)",
+        "BATTERY COUNT",
+        "BATTERY PCS",
+        "BATTERY UNIT",
+        "BATTERY UNITS"
+    ]);
 
-        const directBrand = readCell(sheet, "C55");
-        const directModel = readCell(sheet, "C56");
+    if (batteryQuantity === "-" || isDisallowedLabelValue(batteryQuantity)) {
         const directQty = readCell(sheet, "C58");
-
-        batteryBrand = (directBrand !== "-" && !isDisallowedLabelValue(directBrand))
-            ? directBrand
-            : findValueNextToAnyLabel(sheet, ["BATTERY BRAND"]);
-
-        batteryModel = (directModel !== "-" && !isDisallowedLabelValue(directModel))
-            ? directModel
-            : findValueNextToAnyLabel(sheet, ["BATTERY MODEL", "BATTERY CAPACITY", "BATTERY MODEL / CAPACITY"]);
-
-        batteryQuantity = (directQty !== "-" && !isDisallowedLabelValue(directQty))
-            ? directQty
-            : findValueByLabels(sheet, ["BATTERY QUANTITY", "BATTERY QTY", "NUMBER OF BATTERY", "NO. OF BATTERY"]);
-
-        if (isDisallowedLabelValue(batteryBrand)) batteryBrand = "-";
-        if (isDisallowedLabelValue(batteryModel)) batteryModel = "-";
-        if (isDisallowedLabelValue(batteryQuantity)) batteryQuantity = "-";
-
-        if (batteryQuantity === "-" && batteryBrand !== "-" && batteryModel !== "-") {
-            batteryQuantity = "1";
+        if (directQty !== "-" && !isDisallowedLabelValue(directQty)) {
+            batteryQuantity = directQty;
         }
+    }
 
+    if (
+        batteryQuantity !== "-" &&
+        (/^0+(\.0+)?$/.test(String(batteryQuantity).trim()) ||
+         /^NO\b/i.test(String(batteryQuantity).trim()) ||
+         /^NONE\b/i.test(String(batteryQuantity).trim()) ||
+         /^N\/?A\b/i.test(String(batteryQuantity).trim()))
+    ) {
+        batteryQuantity = "-";
+    }
+
+    // 2. Battery Brand: direct cell C55 or dynamic label search
+    const directBrand = readCell(sheet, "C55");
+    batteryBrand = (directBrand !== "-" && !isDisallowedLabelValue(directBrand))
+        ? directBrand
+        : findValueNextToAnyLabel(sheet, ["BATTERY BRAND", "BRAND OF BATTERY"]);
+
+    // 3. Battery Model: direct cell C56 or dynamic label search
+    const directModel = readCell(sheet, "C56");
+    batteryModel = (directModel !== "-" && !isDisallowedLabelValue(directModel))
+        ? directModel
+        : findValueNextToAnyLabel(sheet, ["BATTERY MODEL", "BATTERY MODEL / CAPACITY", "BATTERY CAPACITY", "MODEL BATTERY"]);
+
+    // 4. Fallback for Battery Model: check Section 6 capacity labels like "BATTERY CAPACITY (16kWh)"
+    if (batteryModel === "-" && sheet && sheet["!ref"]) {
+        const range = XLSX.utils.decode_range(sheet["!ref"]);
+        for (let r = range.s.r; r <= range.e.r; r++) {
+            for (let c = range.s.c; c <= range.e.c; c++) {
+                const cell = sheet[XLSX.utils.encode_cell({ r: r, c: c })];
+                if (!cell) continue;
+                const raw = String(getCellRawValue(cell)).trim();
+                const match = raw.match(/BATTERY\s+CAPACITY\s*\(([^)]+)\)/i);
+                if (match) {
+                    for (let cOffset = c + 1; cOffset <= range.e.c; cOffset++) {
+                        const valCell = sheet[XLSX.utils.encode_cell({ r: r, c: cOffset })];
+                        if (!valCell) continue;
+                        const val = readCellObject(valCell);
+                        if (val !== "-" && val !== "0" && !/^NO\b/i.test(val)) {
+                            batteryModel = match[1].trim();
+                            break;
+                        }
+                    }
+                }
+                if (batteryModel !== "-") break;
+            }
+            if (batteryModel !== "-") break;
+        }
+    }
+
+    if (isDisallowedLabelValue(batteryBrand)) batteryBrand = "-";
+    if (isDisallowedLabelValue(batteryModel)) batteryModel = "-";
+    if (isDisallowedLabelValue(batteryQuantity)) batteryQuantity = "-";
+
+    // 5. If quantity was left blank but brand or model exists, default quantity to 1
+    if (batteryQuantity === "-" && (batteryBrand !== "-" || batteryModel !== "-")) {
+        batteryQuantity = "1";
     }
 
 
