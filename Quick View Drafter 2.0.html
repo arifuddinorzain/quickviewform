@@ -4393,6 +4393,7 @@ function extractProjectData(
         : findValueNextToAnyLabel(sheet, ["BATTERY MODEL", "BATTERY MODEL / CAPACITY", "BATTERY CAPACITY", "MODEL BATTERY"]);
 
     // 4. Fallback for Battery Model: check Section 6 capacity labels like "BATTERY CAPACITY (16kWh)"
+    let detectedCapacityText = null;
     if (batteryModel === "-" && sheet && sheet["!ref"]) {
         const range = XLSX.utils.decode_range(sheet["!ref"]);
         for (let r = range.s.r; r <= range.e.r; r++) {
@@ -4407,14 +4408,20 @@ function extractProjectData(
                         if (!valCell) continue;
                         const val = readCellObject(valCell);
                         if (val !== "-" && val !== "0" && !/^NO\b/i.test(val)) {
-                            batteryModel = match[1].trim();
+                            detectedCapacityText = match[1].trim();
+                            if (batteryQuantity === "-" && parseFloat(val) > 0) {
+                                batteryQuantity = String(parseFloat(val));
+                            }
                             break;
                         }
                     }
                 }
-                if (batteryModel !== "-") break;
+                if (detectedCapacityText) break;
             }
-            if (batteryModel !== "-") break;
+            if (detectedCapacityText) break;
+        }
+        if (detectedCapacityText) {
+            batteryModel = detectedCapacityText;
         }
     }
 
@@ -4425,6 +4432,21 @@ function extractProjectData(
     // 5. If quantity was left blank but brand or model exists, default quantity to 1
     if (batteryQuantity === "-" && (batteryBrand !== "-" || batteryModel !== "-")) {
         batteryQuantity = "1";
+    }
+
+    // 6. Scale total capacity by battery quantity (e.g. 1 unit = 16kWh, 2 units = 32kWh)
+    if (batteryModel !== "-") {
+        const capMatch = batteryModel.match(/^([0-9]+(?:\.[0-9]+)?)\s*([a-zA-Z]+)?$/);
+        const qtyNum = parseFloat(batteryQuantity);
+        if (capMatch && Number.isFinite(qtyNum) && qtyNum > 0) {
+            const unitVal = parseFloat(capMatch[1]);
+            const unitLabel = capMatch[2] || "kWh";
+            const totalVal = unitVal * qtyNum;
+            const formattedTotal = Number.isInteger(totalVal)
+                ? String(totalVal)
+                : totalVal.toFixed(2).replace(/\.?0+$/, "");
+            batteryModel = formattedTotal + unitLabel;
+        }
     }
 
 
